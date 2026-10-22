@@ -1,0 +1,104 @@
+:root {
+  --bg: #0b1220;
+  --panel: #111c30;
+  --panel-2: #16233c;
+  --line: #24344f;
+  --text: #e8eef7;
+  --muted: #93a5bf;
+  --accent: #4da3ff;
+  --green: #3ecf6f;
+  --red: #ff6b6b;
+  --amber: #ffb84d;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.app { max-width: 1060px; margin: 0 auto; padding: 0 20px 48px; }
+
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 0; border-bottom: 1px solid var(--line);
+}
+.brand { font-size: 22px; font-weight: 700; letter-spacing: 0.3px; }
+.brand-mark { color: var(--accent); margin-right: 6px; }
+.brand-sub { font-size: 13px; font-weight: 400; color: var(--muted); margin-left: 10px; }
+.topbar-note { font-size: 12px; color: var(--muted); }
+
+.search-zone { padding: 40px 0 8px; }
+.search-zone h1 { font-size: 32px; margin: 0 0 10px; }
+.lede { color: var(--muted); max-width: 640px; line-height: 1.55; margin: 0 0 22px; }
+
+.search-box { position: relative; max-width: 560px; }
+.search-box input {
+  width: 100%; padding: 14px 16px; font-size: 16px; border-radius: 10px;
+  border: 1px solid var(--line); background: var(--panel); color: var(--text);
+  outline: none;
+}
+.search-box input:focus { border-color: var(--accent); }
+.suggestions {
+  position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 5;
+  list-style: none; margin: 0; padding: 6px; background: var(--panel-2);
+  border: 1px solid var(--line); border-radius: 10px;
+}
+.suggestions li { padding: 9px 10px; border-radius: 6px; cursor: pointer; }
+.suggestions li:hover { background: var(--panel); }
+.suggestions span { color: var(--muted); margin-left: 6px; }
+
+.watchlist { margin-top: 16px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.watchlist span { color: var(--muted); font-size: 13px; }
+.watchlist button {
+  background: var(--panel); color: var(--text); border: 1px solid var(--line);
+  padding: 6px 12px; border-radius: 999px; cursor: pointer; font-size: 13px;
+}
+.watchlist button:hover:not(:disabled) { border-color: var(--accent); }
+.watchlist button:disabled { opacity: 0.4; cursor: wait; }
+
+.company { margin-top: 36px; }
+.company-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; }
+.company-head h2 { margin: 0; font-size: 26px; }
+.ticker-chip {
+  background: var(--accent); color: #06101f; font-size: 13px; font-weight: 700;
+  padding: 2px 8px; border-radius: 6px; vertical-align: middle;
+}
+.cik { color: var(--muted); font-size: 13px; }
+
+.tabs { display: flex; gap: 6px; margin: 18px 0 22px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.tabs button {
+  background: none; border: none; color: var(--muted); font-size: 15px;
+  padding: 10px 14px; cursor: pointer; border-bottom: 2px solid transparent;
+}
+.tabs button.active { color: var(--text); border-bottom-color: var(--accent); }
+
+.fact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.fact-card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+.fact-label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px; }
+.fact-value { font-size: 26px; font-weight: 700; margin: 8px 0 6px; }
+.fact-meta { color: var(--muted); font-size: 12px; }
+
+table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+th, td { text-align: left; padding: 11px 14px; font-size: 14px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; background: var(--panel-2); }
+tr:last-child td { border-bottom: none; }
+.buy { color: var(--green); font-weight: 600; }
+.sell { color: var(--red); font-weight: 600; }
+
+.sample-badge {
+  display: inline-block; background: rgba(255, 184, 77, 0.15); color: var(--amber);
+  border: 1px solid rgba(255, 184, 77, 0.4); font-size: 12px; font-weight: 700;
+  padding: 4px 10px; border-radius: 999px; margin-bottom: 14px; letter-spacing: 0.4px;
+}
+.source-note { color: var(--muted); font-size: 13px; line-height: 1.6; margin-top: 16px; }
+.error { color: var(--red); }
+.footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; line-height: 1.6; }
+
+@media (max-width: 640px) {
+  .search-zone h1 { font-size: 25px; }
+  .brand-sub { display: none; }
+}
