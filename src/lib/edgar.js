@@ -4,7 +4,12 @@
 // deployed site carry the browser UA. The scheduled ingest jobs (see
 // /ingest) run server-side with a proper declared User-Agent.
 
-const TICKERS_URL = 'https://www.sec.gov/files/company_tickers.json'
+// The ticker list is fetched at BUILD time by scripts/fetch-tickers.mjs
+// and served same-origin: www.sec.gov sends no CORS headers, so a
+// browser fetch from the deployed site is blocked (found live
+// 2026-10-22, Bill's first visit). data.sec.gov below DOES send
+// Access-Control-Allow-Origin: *, so company data fetches work live.
+const TICKERS_URL = '/tickers.json'
 const FACTS_URL = (cik) =>
   `https://data.sec.gov/api/xbrl/companyfacts/CIK${String(cik).padStart(10, '0')}.json`
 const SUBMISSIONS_URL = (cik) =>
