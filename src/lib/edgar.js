@@ -7,11 +7,13 @@
 // The ticker list is fetched at BUILD time by scripts/fetch-tickers.mjs
 // and served same-origin: www.sec.gov sends no CORS headers, so a
 // browser fetch from the deployed site is blocked (found live
-// 2026-10-22, Bill's first visit). data.sec.gov below DOES send
-// Access-Control-Allow-Origin: *, so company data fetches work live.
+// 2026-10-22, Bill's first visit). data.sec.gov companyfacts has the
+// same problem — its 200 responses carry no CORS header either (only
+// its error pages do, which misled an early check) — so company facts
+// come through our own serverless relay at /api/companyfacts, which
+// fetches EDGAR server-side with a declared User-Agent.
 const TICKERS_URL = '/tickers.json'
-const FACTS_URL = (cik) =>
-  `https://data.sec.gov/api/xbrl/companyfacts/CIK${String(cik).padStart(10, '0')}.json`
+const FACTS_URL = (cik) => `/api/companyfacts?cik=${cik}`
 const SUBMISSIONS_URL = (cik) =>
   `https://data.sec.gov/submissions/CIK${String(cik).padStart(10, '0')}.json`
 
