@@ -56,6 +56,16 @@ function drawSmcChart(canvas, cssWidth, candles, analysis, startIndex) {
   ctx.font = '11px "Segoe UI", system-ui, -apple-system, sans-serif'
   ctx.textBaseline = 'middle'
 
+  // Narrow screens (phones): show fewer bars so candles and labels have
+  // room to breathe — 250 daily bars across ~360px made the event labels
+  // pile up unreadably (Boss's screenshot, 2026-10-26).
+  const SMALL = cssWidth < 560
+  if (SMALL && Array.isArray(candles) && candles.length > 130) {
+    const skip = candles.length - 130
+    candles = candles.slice(skip)
+    startIndex = (Number.isFinite(startIndex) ? startIndex : 0) + skip
+  }
+
   if (!Array.isArray(candles) || candles.length === 0) {
     ctx.fillStyle = TEXT
     ctx.textAlign = 'center'
@@ -113,6 +123,47 @@ function drawSmcChart(canvas, cssWidth, candles, analysis, startIndex) {
   const clampY = (y) => Math.min(plotBottom, Math.max(plotTop, y))
   const inRange = (price) => price >= visMin && price <= visMax
   const overlapsRange = (top, bottom) => top >= visMin && bottom <= visMax
+
+  // --- Label decluttering (the Pine original had this; V1 of this chart
+  // did not, and labels stacked on top of each other). Every text label
+  // registers its rect here; later labels shift vertically until they
+  // find free space, or are skipped (their tick line still draws). ---
+  const placed = []
+  const rectHits = (cx, cy, w, h) =>
+    placed.some(
+      (r) => Math.abs(r.cx - cx) < (r.w + w) / 2 + 3 && Math.abs(r.cy - cy) < (r.h + h) / 2 + 2,
+    )
+  function placeLabel(cx, cy, w, h, preferUp) {
+    // Canvas y grows downward: negative offset = label moves UP.
+    const ordered = preferUp ? [0, -15, 15, -30, 30, -45, 45] : [0, 15, -15, 30, -30, 45, -45]
+    for (const dy of ordered) {
+      const y = Math.min(plotBottom - h / 2 - 1, Math.max(plotTop + h / 2 + 1, cy + dy))
+      if (!rectHits(cx, y, w, h)) {
+        placed.push({ cx, cy: y, w, h })
+        return y
+      }
+    }
+    return null
+  }
+  function pillPath(x, y, w, h, r) {
+    // roundRect is Safari 16+; fall back to a plain rect on older engines
+    // so a missing API can never blank the whole chart.
+    ctx.beginPath()
+    if (typeof ctx.roundRect === 'function') ctx.roundRect(x, y, w, h, r)
+    else ctx.rect(x, y, w, h)
+  }
+  function drawPillLabel(text, cx, cy, color, fontPx) {
+    ctx.font = `600 ${fontPx}px "Segoe UI", system-ui, -apple-system, sans-serif`
+    const w = ctx.measureText(text).width + 10
+    const h = fontPx + 7
+    ctx.fillStyle = 'rgba(9, 14, 26, 0.88)'
+    pillPath(cx - w / 2, cy - h / 2, w, h, 4)
+    ctx.fill()
+    ctx.fillStyle = color
+    ctx.textAlign = 'center'
+    ctx.fillText(text, cx, cy + 0.5)
+    return { w, h }
+  }
 
   // --- Grid + price axis (~5 labels) ---
   ctx.strokeStyle = GRID
@@ -214,9 +265,17 @@ function drawSmcChart(canvas, cssWidth, candles, analysis, startIndex) {
     ctx.lineTo(x2, y)
     ctx.stroke()
     ctx.setLineDash([])
+    const lx = Math.min(x2, plotRight) - 14
+    const ly = y - 10
+    ctx.font = '600 10px "Segoe UI", system-ui, -apple-system, sans-serif'
+    const lw = ctx.measureText('$$$').width + 8
+    placed.push({ cx: lx, cy: ly, w: lw, h: 15 })
+    ctx.fillStyle = 'rgba(9, 14, 26, 0.88)'
+    pillPath(lx - lw / 2, ly - 7.5, lw, 15, 4)
+    ctx.fill()
     ctx.fillStyle = color
-    ctx.textAlign = 'right'
-    ctx.fillText('$$$', Math.min(x2, plotRight) - 2, y - 9)
+    ctx.textAlign = 'center'
+    ctx.fillText('$$$', lx, ly + 0.5)
   }
 
   // --- Candles with wicks ---
@@ -244,14 +303,21 @@ function drawSmcChart(canvas, cssWidth, candles, analysis, startIndex) {
     ctx.fillRect(x - bodyWidth / 2, bodyTop, bodyWidth, bodyHeight)
   }
 
-  // --- BOS / CHoCH markers (MSS drawn smaller, to reduce clutter) ---
-  for (const ev of events) {
+  // --- BOS / CHoCH / MSS markers, drawn in priority order (CHoCH first,
+  // MSS last) with pill labels placed by the declutter system. A label
+  // that cannot find free space is skipped — its tick line still draws.
+  // On narrow screens MSS keeps its tick but drops the text entirely. ---
+  const priority = { CHoCH: 0, BOS: 1, MSS: 2 }
+  const sortedEvents = [...events].sort(
+    (p, q) => (priority[p.type] ?? 3) - (priority[q.type] ?? 3),
+  )
+  for (const ev of sortedEvents) {
     const index = num(ev.index)
     if (index === null || index < base || index > lastFull) continue
     const level = num(ev.level)
     if (level === null || !inRange(level)) continue
     const isMss = ev.type === 'MSS'
-    const label = ev.type === 'BOS' || ev.type === 'CHoCH' ? ev.type : 'MSS'
+    const label = isMss ? 'MSS' : ev.type
     const color = ev.direction === 'up' ? BLUE : DOWN
     const x = barCenter(index)
     const y = yFor(level)
@@ -262,13 +328,15 @@ function drawSmcChart(canvas, cssWidth, candles, analysis, startIndex) {
     ctx.lineTo(x + Math.max(6, step * 0.8), y)
     ctx.stroke()
     ctx.lineWidth = 1
-    ctx.fillStyle = color
-    ctx.font = `${isMss ? 9 : 11}px "Segoe UI", system-ui, -apple-system, sans-serif`
-    ctx.textAlign = 'center'
-    const labelY = ev.direction === 'up' ? y - 10 : y + 14
-    // Keep the label inside the plot area.
-    const clampedX = Math.min(plotRight - 18, Math.max(plotLeft + 18, x))
-    ctx.fillText(label, clampedX, Math.min(plotBottom - 4, Math.max(plotTop + 8, labelY)))
+    if (isMss && SMALL) continue
+    const fontPx = isMss ? 9 : 10.5
+    ctx.font = `600 ${fontPx}px "Segoe UI", system-ui, -apple-system, sans-serif`
+    const w = ctx.measureText(label).width + 10
+    const h = fontPx + 7
+    const wantY = ev.direction === 'up' ? y - 13 : y + 15
+    const clampedX = Math.min(plotRight - w / 2 - 1, Math.max(plotLeft + w / 2 + 1, x))
+    const placedY = placeLabel(clampedX, wantY, w, h, ev.direction === 'up')
+    if (placedY !== null) drawPillLabel(label, clampedX, placedY, color, fontPx)
   }
   ctx.font = '11px "Segoe UI", system-ui, -apple-system, sans-serif'
 
