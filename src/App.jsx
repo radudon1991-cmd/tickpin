@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   loadTickers,
+  loadOwnership,
   fetchCompanyFacts,
   extractSnapshot,
   fmtUSD,
@@ -13,6 +14,7 @@ import {
   dataSources,
 } from './lib/sampleData'
 import insiderData from './data/insider.json'
+import shortInterestData from './data/shortInterest.json'
 
 const STARTER_WATCHLIST = ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'ZENA']
 const TABS = ['Overview', 'Insider Trades', 'Institutional Ownership', 'Short Interest']
@@ -54,12 +56,19 @@ export default function App() {
   const [tab, setTab] = useState('Overview')
   const [facts, setFacts] = useState(null)
   const [factsState, setFactsState] = useState('idle') // idle|loading|ok|error
+  const [ownership, setOwnership] = useState(null)
   const searchRef = useRef(null)
 
   useEffect(() => {
     loadTickers()
       .then(setTickers)
       .catch((e) => setTickersError(e.message))
+  }, [])
+
+  useEffect(() => {
+    loadOwnership()
+      .then(setOwnership)
+      .catch(() => setOwnership({}))
   }, [])
 
   const suggestions = useMemo(() => {
@@ -173,8 +182,8 @@ export default function App() {
               {factsState === 'ok' && snapshot && (
                 <>
                   <div className="fact-grid">
-                    <FactCard label="Revenue (latest annual)" fact={snapshot.revenue} money />
-                    <FactCard label="Net income (latest annual)" fact={snapshot.netIncome} money />
+                    <FactCard label="Revenue (latest period)" fact={snapshot.revenue} money />
+                    <FactCard label="Net income (latest period)" fact={snapshot.netIncome} money />
                     <FactCard label="Total assets" fact={snapshot.totalAssets} money />
                     <FactCard label="Cash & equivalents" fact={snapshot.cash} money />
                     <FactCard label="Shares outstanding" fact={snapshot.sharesOutstanding} />
@@ -251,43 +260,144 @@ export default function App() {
 
           {tab === 'Institutional Ownership' && (
             <section>
-              <SampleBadge />
-              <table>
-                <thead>
-                  <tr><th>Holder</th><th>Shares</th><th>Change</th><th>% outstanding</th><th>Period</th></tr>
-                </thead>
-                <tbody>
-                  {sampleOwnership.map((r, i) => (
-                    <tr key={i}>
-                      <td>{r.holder}</td><td>{fmtNum(r.shares)}</td>
-                      <td className={r.change >= 0 ? 'buy' : 'sell'}>
-                        {r.change >= 0 ? '+' : ''}{fmtNum(r.change)}
-                      </td>
-                      <td>{r.pctOut}%</td><td>{r.filed}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              {(() => {
+                const real = ownership?.[company.ticker]
+                if (real && real.length > 0) {
+                  const shown = real.slice(0, 100)
+                  return (
+                    <>
+                      <p>
+                        {fmtNum(real.length)} institutional holders reported this stock in their
+                        latest Form 13F filings.
+                      </p>
+                      <table>
+                        <thead>
+                          <tr><th>Holder</th><th>Type</th><th>Shares</th><th>Change</th><th>Reported value</th><th>% outstanding</th><th>Period</th><th>Filed</th></tr>
+                        </thead>
+                        <tbody>
+                          {shown.map((r, i) => (
+                            <tr key={i}>
+                              <td>{r.holder}</td><td>{r.type}</td><td>{fmtNum(r.shares)}</td>
+                              <td className={r.change >= 0 ? 'buy' : 'sell'}>
+                                {r.change >= 0 ? '+' : ''}{fmtNum(r.change)}
+                              </td>
+                              <td>{fmtUSD(r.value)}</td>
+                              <td>{r.pctOut == null ? '—' : `${r.pctOut}%`}</td>
+                              <td>{r.filed}</td><td>{r.fileDate}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      {real.length > shown.length && (
+                        <p className="source-note">
+                          Showing the {shown.length} largest positions of {fmtNum(real.length)}{' '}
+                          reported holders — the complete table is in the data file this page
+                          loads (/ownership.json).
+                        </p>
+                      )}
+                      <p className="source-note">
+                        Real holdings parsed from SEC Form 13F filings (SEC bulk Form 13F data
+                        sets, plus EDGAR filings for managers on notice status). Each row is that
+                        filer's own latest reported period — periods differ per filer and are
+                        shown per row. Change is versus the same filer's previous period.
+                        Reported value is the filer's own as-filed figure.
+                      </p>
+                    </>
+                  )
+                }
+                if (real) {
+                  return (
+                    <p>
+                      No Form 13F holders found for {company.ticker} in the latest processed
+                      filings.
+                    </p>
+                  )
+                }
+                if (ownership === null) {
+                  return <p>Loading reported holders…</p>
+                }
+                return (
+                  <>
+                    <SampleBadge />
+                    <table>
+                      <thead>
+                        <tr><th>Holder</th><th>Shares</th><th>Change</th><th>% outstanding</th><th>Period</th></tr>
+                      </thead>
+                      <tbody>
+                        {sampleOwnership.map((r, i) => (
+                          <tr key={i}>
+                            <td>{r.holder}</td><td>{fmtNum(r.shares)}</td>
+                            <td className={r.change >= 0 ? 'buy' : 'sell'}>
+                              {r.change >= 0 ? '+' : ''}{fmtNum(r.change)}
+                            </td>
+                            <td>{r.pctOut}%</td><td>{r.filed}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </>
+                )
+              })()}
               <SourceNote entry={dataSources.ownership} />
             </section>
           )}
 
           {tab === 'Short Interest' && (
             <section>
-              <SampleBadge />
-              <table>
-                <thead>
-                  <tr><th>Settlement date</th><th>Short interest</th><th>Avg daily volume</th><th>Days to cover</th></tr>
-                </thead>
-                <tbody>
-                  {sampleShortInterest.map((r, i) => (
-                    <tr key={i}>
-                      <td>{r.settlement}</td><td>{fmtNum(r.shortInterest)}</td>
-                      <td>{fmtNum(r.avgDailyVolume)}</td><td>{r.daysToCover}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              {(() => {
+                const real = shortInterestData[company.ticker]
+                if (real && real.length > 0) {
+                  return (
+                    <>
+                      <table>
+                        <thead>
+                          <tr><th>Settlement date</th><th>Short interest</th><th>Avg daily volume</th><th>Days to cover</th></tr>
+                        </thead>
+                        <tbody>
+                          {real.map((r, i) => (
+                            <tr key={i}>
+                              <td>{r.settlement}</td><td>{fmtNum(r.shortInterest)}</td>
+                              <td>{fmtNum(r.avgDailyVolume)}</td><td>{r.daysToCover}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      <p className="source-note">
+                        Real short interest from FINRA's Consolidated Short Interest file
+                        (ingest/finra_short_interest.py), cross-checked against Nasdaq's
+                        published short-interest table. Each row is a twice-monthly snapshot
+                        as of its settlement date — never a live figure.
+                      </p>
+                    </>
+                  )
+                }
+                if (real) {
+                  return (
+                    <p>
+                      FINRA reports no short interest rows for {company.ticker} in the latest
+                      published settlement periods.
+                    </p>
+                  )
+                }
+                return (
+                  <>
+                    <SampleBadge />
+                    <table>
+                      <thead>
+                        <tr><th>Settlement date</th><th>Short interest</th><th>Avg daily volume</th><th>Days to cover</th></tr>
+                      </thead>
+                      <tbody>
+                        {sampleShortInterest.map((r, i) => (
+                          <tr key={i}>
+                            <td>{r.settlement}</td><td>{fmtNum(r.shortInterest)}</td>
+                            <td>{fmtNum(r.avgDailyVolume)}</td><td>{r.daysToCover}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </>
+                )
+              })()}
               <SourceNote entry={dataSources.short} />
             </section>
           )}

@@ -1,0 +1,192 @@
+{
+  "AAPL": [
+    {
+      "settlement": "2026-09-30",
+      "shortInterest": 120763539,
+      "avgDailyVolume": 39858260,
+      "daysToCover": 3.03
+    },
+    {
+      "settlement": "2026-09-15",
+      "shortInterest": 128753092,
+      "avgDailyVolume": 45135477,
+      "daysToCover": 2.85
+    },
+    {
+      "settlement": "2026-08-31",
+      "shortInterest": 139749097,
+      "avgDailyVolume": 39537335,
+      "daysToCover": 3.53
+    },
+    {
+      "settlement": "2026-08-14",
+      "shortInterest": 116327753,
+      "avgDailyVolume": 46065396,
+      "daysToCover": 2.53
+    },
+    {
+      "settlement": "2026-07-31",
+      "shortInterest": 141606163,
+      "avgDailyVolume": 58400983,
+      "daysToCover": 2.42
+    },
+    {
+      "settlement": "2026-07-15",
+      "shortInterest": 146547784,
+      "avgDailyVolume": 47952794,
+      "daysToCover": 3.06
+    }
+  ],
+  "MSFT": [
+    {
+      "settlement": "2026-09-30",
+      "shortInterest": 61133927,
+      "avgDailyVolume": 23981233,
+      "daysToCover": 2.55
+    },
+    {
+      "settlement": "2026-09-15",
+      "shortInterest": 67346414,
+      "avgDailyVolume": 18052501,
+      "daysToCover": 3.73
+    },
+    {
+      "settlement": "2026-08-31",
+      "shortInterest": 74451155,
+      "avgDailyVolume": 23419047,
+      "daysToCover": 3.18
+    },
+    {
+      "settlement": "2026-08-14",
+      "shortInterest": 68544953,
+      "avgDailyVolume": 33441152,
+      "daysToCover": 2.05
+    },
+    {
+      "settlement": "2026-07-31",
+      "shortInterest": 81311791,
+      "avgDailyVolume": 40018336,
+      "daysToCover": 2.03
+    },
+    {
+      "settlement": "2026-07-15",
+      "shortInterest": 92373474,
+      "avgDailyVolume": 32422509,
+      "daysToCover": 2.85
+    }
+  ],
+  "NVDA": [
+    {
+      "settlement": "2026-09-30",
+      "shortInterest": 311389688,
+      "avgDailyVolume": 110290688,
+      "daysToCover": 2.82
+    },
+    {
+      "settlement": "2026-09-15",
+      "shortInterest": 294225803,
+      "avgDailyVolume": 115324892,
+      "daysToCover": 2.55
+    },
+    {
+      "settlement": "2026-08-31",
+      "shortInterest": 298301619,
+      "avgDailyVolume": 139118326,
+      "daysToCover": 2.14
+    },
+    {
+      "settlement": "2026-08-14",
+      "shortInterest": 285956804,
+      "avgDailyVolume": 113580992,
+      "daysToCover": 2.52
+    },
+    {
+      "settlement": "2026-07-31",
+      "shortInterest": 292667375,
+      "avgDailyVolume": 127011756,
+      "daysToCover": 2.3
+    },
+    {
+      "settlement": "2026-07-15",
+      "shortInterest": 324052767,
+      "avgDailyVolume": 131174356,
+      "daysToCover": 2.47
+    }
+  ],
+  "TSLA": [
+    {
+      "settlement": "2026-09-30",
+      "shortInterest": 70931312,
+      "avgDailyVolume": 36582381,
+      "daysToCover": 1.94
+    },
+    {
+      "settlement": "2026-09-15",
+      "shortInterest": 68862357,
+      "avgDailyVolume": 40108176,
+      "daysToCover": 1.72
+    },
+    {
+      "settlement": "2026-08-31",
+      "shortInterest": 74230933,
+      "avgDailyVolume": 36423555,
+      "daysToCover": 2.04
+    },
+    {
+      "settlement": "2026-08-14",
+      "shortInterest": 69196896,
+      "avgDailyVolume": 32128184,
+      "daysToCover": 2.15
+    },
+    {
+      "settlement": "2026-07-31",
+      "shortInterest": 68501639,
+      "avgDailyVolume": 44213010,
+      "daysToCover": 1.55
+    },
+    {
+      "settlement": "2026-07-15",
+      "shortInterest": 70646375,
+      "avgDailyVolume": 39663962,
+      "daysToCover": 1.78
+    }
+  ],
+  "ZENA": [
+    {
+      "settlement": "2026-09-30",
+      "shortInterest": 13077483,
+      "avgDailyVolume": 1692091,
+      "daysToCover": 7.73
+    },
+    {
+      "settlement": "2026-09-15",
+      "shortInterest": 11599694,
+      "avgDailyVolume": 1689945,
+      "daysToCover": 6.86
+    },
+    {
+      "settlement": "2026-08-31",
+      "shortInterest": 8819456,
+      "avgDailyVolume": 2924256,
+      "daysToCover": 3.02
+    },
+    {
+      "settlement": "2026-08-14",
+      "shortInterest": 8735890,
+      "avgDailyVolume": 10312012,
+      "daysToCover": 1.0
+    },
+    {
+      "settlement": "2026-07-31",
+      "shortInterest": 7621961,
+      "avgDailyVolume": 1802487,
+      "daysToCover": 4.23
+    },
+    {
+      "settlement": "2026-07-15",
+      "shortInterest": 7713389,
+      "avgDailyVolume": 1489069,
+      "daysToCover": 5.18
+    }
+  ]
+}
