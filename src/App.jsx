@@ -22,6 +22,8 @@ import AdminPanel from './components/AdminPanel'
 import { fetchPrices } from './lib/prices'
 import { analyzeSMC } from './lib/smc'
 import SmcChart from './components/SmcChart'
+import NewsTab from './components/NewsTab'
+import Dashboard from './components/Dashboard'
 
 const STARTER_WATCHLIST = ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'ZENA']
 const TABS = [
@@ -30,6 +32,7 @@ const TABS = [
   'Institutional Ownership',
   'Short Interest',
   'SMC Analysis',
+  'News',
 ]
 const DISPLAY_BARS = 250
 
@@ -87,6 +90,7 @@ function AppInner() {
   const { user, profile, isAdmin, signOut } = useAuth()
   const [authOpen, setAuthOpen] = useState(false)
   const [showAdmin, setShowAdmin] = useState(false)
+  const [showDashboard, setShowDashboard] = useState(false)
   const [myWatchlist, setMyWatchlist] = useState([])
   const [tickers, setTickers] = useState([])
   const [tickersError, setTickersError] = useState('')
@@ -220,8 +224,21 @@ function AppInner() {
           {user ? (
             <>
               <span className="topbar-user">{profile?.display_name || user.email}</span>
+              <button
+                onClick={() => {
+                  setShowDashboard(!showDashboard)
+                  if (!showDashboard) setShowAdmin(false)
+                }}
+              >
+                {showDashboard ? 'Back to site' : 'Dashboard'}
+              </button>
               {isAdmin && (
-                <button onClick={() => setShowAdmin(!showAdmin)}>
+                <button
+                  onClick={() => {
+                    setShowAdmin(!showAdmin)
+                    if (!showAdmin) setShowDashboard(false)
+                  }}
+                >
                   {showAdmin ? 'Back to site' : 'Admin'}
                 </button>
               )}
@@ -229,6 +246,7 @@ function AppInner() {
                 onClick={async () => {
                   await signOut()
                   setShowAdmin(false)
+                  setShowDashboard(false)
                 }}
               >
                 Log out
@@ -248,6 +266,15 @@ function AppInner() {
 
       {showAdmin && isAdmin ? (
         <AdminPanel />
+      ) : showDashboard ? (
+        <Dashboard
+          tickers={tickers}
+          onSelect={(entry) => {
+            setShowDashboard(false)
+            selectCompany(entry)
+          }}
+          onLogin={() => setAuthOpen(true)}
+        />
       ) : (
         <>
       <section className="search-zone">
@@ -792,6 +819,12 @@ function AppInner() {
                   </p>
                 </>
               )}
+            </section>
+          )}
+
+          {tab === 'News' && (
+            <section>
+              <NewsTab ticker={company.ticker} />
             </section>
           )}
         </main>

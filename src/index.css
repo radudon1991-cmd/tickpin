@@ -181,3 +181,72 @@ tr:last-child td { border-bottom: none; }
 @media (max-width: 640px) {
   .smc-cols { grid-template-columns: 1fr; }
 }
+
+/* --- News tab (Apple Stocks style story cards) --- */
+.news-list { display: flex; flex-direction: column; gap: 10px; }
+.news-card {
+  display: flex; justify-content: space-between; align-items: center; gap: 14px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 16px; text-decoration: none; color: var(--text);
+}
+.news-card:hover { border-color: var(--accent); }
+.news-card-body { min-width: 0; }
+.news-meta { display: flex; gap: 8px; align-items: baseline; margin-bottom: 6px; font-size: 12px; }
+.news-publisher { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+.news-time { color: var(--muted); }
+.news-title { font-size: 16px; font-weight: 600; line-height: 1.4; }
+.news-thumb {
+  width: 88px; height: 64px; object-fit: cover; border-radius: 8px; flex-shrink: 0;
+  background: var(--panel-2);
+}
+@media (max-width: 640px) {
+  .news-thumb { width: 72px; height: 54px; }
+  .news-title { font-size: 15px; }
+}
+
+/* --- Member dashboard --- */
+.dash { margin-top: 36px; }
+.dash h2 { margin: 0 0 6px; font-size: 26px; }
+.dash-h3 { margin: 26px 0 12px; font-size: 18px; }
+.dash-empty { color: var(--muted); }
+.dash-login-card { max-width: 520px; }
+.dash-login-title { font-size: 18px; font-weight: 700; margin: 4px 0 8px; }
+.dash-login-note { color: var(--muted); line-height: 1.55; margin: 0 0 16px; }
+.dash-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px;
+}
+.dash-card {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 16px; cursor: pointer;
+}
+.dash-card:hover { border-color: var(--accent); }
+.dash-card-top { display: flex; justify-content: space-between; align-items: center; }
+.dash-card-ticker { font-size: 17px; font-weight: 700; }
+.dash-remove {
+  background: transparent; border: 1px solid var(--line); border-radius: 6px;
+  color: var(--muted); padding: 3px 9px; font-size: 12px; cursor: pointer; font: inherit;
+}
+.dash-remove:hover { color: var(--red); border-color: var(--red); }
+.dash-card-name {
+  color: var(--muted); font-size: 13px; margin-top: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.dash-card-price { font-size: 20px; font-weight: 700; margin-top: 10px; }
+.dash-card-price .buy, .dash-card-price .sell { font-size: 14px; }
+.dash-spark-wrap { margin-top: 8px; min-height: 28px; }
+.dash-spark { display: block; }
+.dash-add { margin-top: 22px; max-width: 560px; }
+.dash-add-label { display: block; font-weight: 600; margin-bottom: 8px; }
+.dash-add-box { max-width: 560px; }
+.dash-suggestion-added { opacity: 0.55; cursor: default; }
+.dash-added-note { color: var(--muted); font-size: 12px; margin-left: 8px; }
+.dash-news { display: flex; flex-direction: column; }
+.dash-news-row {
+  display: flex; flex-direction: column; gap: 3px; padding: 11px 4px;
+  border-bottom: 1px solid var(--line); text-decoration: none; color: var(--text);
+}
+.dash-news-row:first-child { border-top: 1px solid var(--line); }
+.dash-news-row:hover .dash-news-title { color: var(--accent); }
+.dash-news-meta { color: var(--muted); font-size: 12px; }
+.dash-news-meta strong { color: var(--accent); }
+.dash-news-title { font-size: 15px; font-weight: 600; line-height: 1.4; }
