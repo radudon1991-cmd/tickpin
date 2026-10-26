@@ -4,6 +4,7 @@ import { supabase, authConfigured } from '../lib/supabase'
 import { fetchPrices } from '../lib/prices'
 import { fetchNews, timeAgo } from '../lib/news'
 import { useLang } from '../lib/i18n'
+import TvWidget from './TvWidget'
 
 // Member dashboard: the user's own customizable watchlist as price
 // cards with sparklines, plus a merged news feed for those stocks.
@@ -234,8 +235,14 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
                   </button>
                 </div>
                 <div className="dash-card-name">{entry ? entry.name : ''}</div>
-                <div className="dash-card-price">
-                  {d == null ? '…' : fmtPrice(d.lastClose)}
+                <div
+                  className="dash-tv-wrap"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <TvWidget type="mini" symbol={tk} />
+                </div>
+                <div className="dash-card-daily">
+                  {t('dash.dailyClose')}: {d == null ? '…' : fmtPrice(d.lastClose)}
                   {change != null && (
                     <span className={change >= 0 ? 'buy' : 'sell'}>
                       {' '}
@@ -243,9 +250,6 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
                       {change.toFixed(2)}%
                     </span>
                   )}
-                </div>
-                <div className="dash-spark-wrap">
-                  {d && !d.failed ? <Sparkline closes={d.closes} /> : null}
                 </div>
               </div>
             )

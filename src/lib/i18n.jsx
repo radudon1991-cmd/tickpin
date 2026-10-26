@@ -507,6 +507,12 @@ const STRINGS = {
     en: 'Loading your dashboard…',
     th: 'กำลังโหลดแดชบอร์ดของคุณ…',
   },
+  'live.title': { en: 'Live price', th: 'ราคาเรียลไทม์' },
+  'live.note': {
+    en: 'Real-time quote via TradingView (Cboe exchanges). Separate from TickPin’s daily data in the tabs below.',
+    th: 'ราคาเรียลไทม์จาก TradingView (ตลาด Cboe) แยกจากข้อมูลรายวันของ TickPin ในแท็บด้านล่าง',
+  },
+  'dash.dailyClose': { en: 'TickPin daily close', th: 'ราคาปิดรายวันของ TickPin' },
   'dash.title': { en: 'My Dashboard', th: 'แดชบอร์ดของฉัน' },
   'dash.loginTitle': {
     en: 'Log in to build your own dashboard',

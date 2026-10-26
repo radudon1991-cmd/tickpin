@@ -345,3 +345,13 @@ button.pro-chip {
 .google-btn:disabled { opacity: 0.55; }
 .modal-switch button { color: var(--accent); }
 .modal .notice { color: var(--green); }
+
+/* TradingView live widgets (stock-page Symbol Info + dashboard minis) */
+.tv-wrap { margin: 16px 0 4px; }
+.tv-h3 { margin: 0 0 8px; font-size: 15px; }
+.tv-host { min-height: 240px; }
+.tv-cap { color: var(--muted); font-size: 12px; margin: 6px 0 0; }
+.tv-host-mini { min-height: 220px; }
+.dash-tv-wrap { margin-top: 10px; }
+.dash-card-daily { color: var(--muted); font-size: 12px; margin-top: 8px; }
+.tradingview-widget-container iframe { display: block; }
