@@ -701,6 +701,14 @@ export default function ProChart({ candles }) {
     setHover(null)
   }
 
+  // Reset = back to the standard view: Daily interval + 1Y range.
+  // (Before, Reset re-applied the CURRENT range, so after picking "All"
+  // there was no one-tap way back to the plain daily view.)
+  const resetView = () => {
+    setIntervalSel('D')
+    applyRange('1Y', Array.isArray(candles) ? candles : [])
+  }
+
   // Reset the window whenever the series changes (new ticker or new
   // interval), using the currently selected range preset.
   const lastSeriesRef = useRef(null)
@@ -932,7 +940,7 @@ export default function ProChart({ candles }) {
             </button>
           ))}
         </div>
-        <button className="pro-chip" onClick={() => applyRange(rangeRef.current, series)}>
+        <button className="pro-chip" onClick={resetView}>
           {t('chart.reset')}
         </button>
       </div>
