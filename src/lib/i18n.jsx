@@ -514,6 +514,12 @@ const STRINGS = {
   },
   'chart.todayLoading': { en: 'Loading today’s session…', th: 'กำลังโหลดข้อมูลวันนี้…' },
   'chart.todayError': { en: 'Could not load today’s session.', th: 'โหลดข้อมูลวันนี้ไม่สำเร็จ' },
+  'day.days': { en: 'Days', th: 'จำนวนวัน' },
+  'day.apply': { en: 'Show', th: 'แสดง' },
+  'day.multiNote': {
+    en: 'Last {n} trading days — intraday bars incl. pre-market and after-hours (US/Eastern times) — via Yahoo Finance.',
+    th: '{n} วันทำการล่าสุด — แท่งราคาระหว่างวัน รวมก่อนเปิดตลาดและหลังปิดตลาด (เวลา US/Eastern) — จาก Yahoo Finance',
+  },
   'day.pre': { en: 'Pre-market', th: 'ก่อนเปิดตลาด' },
   'day.after': { en: 'After-hours', th: 'หลังปิดตลาด' },
   'day.regular': { en: 'Market hours', th: 'เวลาตลาดเปิด' },

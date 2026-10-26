@@ -63,12 +63,25 @@ export default async function handler(req, res) {
   const ticker = tickerRaw.toUpperCase()
   try {
     if ((req.query?.intraday || '').toString() === '1') {
-      // Today's session at 1-minute resolution, including pre-market
-      // (from 04:00 ET) and after-hours (to 20:00 ET) bars. Also
-      // returns the previous close from Yahoo's meta block — the
-      // locked Today chart draws it as the dashed reference line.
+      // Intraday sessions at minute resolution, including pre-market
+      // (from 04:00 ET) and after-hours (to 20:00 ET) bars. ?days=N
+      // (1..30, default 1) selects how many trading sessions to
+      // return: the locked session chart's day-count filter. Also
+      // returns prevClose — the close before the returned window —
+      // which the chart draws as its dashed reference line.
+      let days = parseInt((req.query?.days || '1').toString(), 10)
+      if (!Number.isFinite(days)) days = 1
+      days = Math.min(30, Math.max(1, days))
+      const ladder =
+        days === 1
+          ? ['1d', '1m']
+          : days <= 5
+            ? ['5d', '1m']
+            : days <= 10
+              ? ['1mo', '5m']
+              : ['3mo', '15m']
       const up = await fetch(
-        `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?range=1d&interval=1m&includePrePost=true`,
+        `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?range=${ladder[0]}&interval=${ladder[1]}&includePrePost=true`,
         {
           headers: {
             'User-Agent': 'TickPin research contact: radudon1991@gmail.com',
@@ -86,10 +99,33 @@ export default async function handler(req, res) {
         res.status(502).json({ error: 'Yahoo chart returned an error' })
         return
       }
-      const intraday = toCandles(data)
-      const prevClose = result.meta?.chartPreviousClose ?? result.meta?.previousClose ?? null
+      let intraday = toCandles(data)
+      let prevClose = result.meta?.chartPreviousClose ?? result.meta?.previousClose ?? null
+      if (days > 1 && intraday.length > 0) {
+        // Keep only the last `days` distinct ET session dates, and set
+        // the reference close to the last bar before the window.
+        const dateFmt = new Intl.DateTimeFormat('en-CA', {
+          timeZone: 'America/New_York',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        })
+        const dates = []
+        const seen = new Set()
+        for (const b of intraday) {
+          const d = dateFmt.format(new Date(b.t * 1000))
+          if (!seen.has(d)) {
+            seen.add(d)
+            dates.push(d)
+          }
+        }
+        const keep = new Set(dates.slice(-days))
+        const firstKept = intraday.findIndex((b) => keep.has(dateFmt.format(new Date(b.t * 1000))))
+        if (firstKept > 0) prevClose = intraday[firstKept - 1].c
+        intraday = intraday.filter((b) => keep.has(dateFmt.format(new Date(b.t * 1000))))
+      }
       res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300')
-      res.status(200).json({ intraday, prevClose })
+      res.status(200).json({ intraday, prevClose, days })
       return
     }
     const daily = await fetchCandles(ticker, '1d')

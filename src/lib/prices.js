@@ -24,10 +24,17 @@ export async function fetchPrices(ticker) {
 const intraCache = new Map()
 
 export async function fetchIntraday(ticker) {
-  const key = (ticker || '').toString().toUpperCase()
+  return fetchSessions(ticker, 1)
+}
+
+// Intraday sessions for the locked session chart: `days` trading
+// sessions (1..30) of minute bars incl. pre/post market, plus the
+// close before the window (prevClose).
+export async function fetchSessions(ticker, days = 1) {
+  const key = `${(ticker || '').toString().toUpperCase()}:${days}`
   const hit = intraCache.get(key)
   if (hit && Date.now() - hit.at < 30_000) return hit.data
-  const res = await fetch(`${PRICES_URL(key)}&intraday=1`)
+  const res = await fetch(`${PRICES_URL(ticker)}&intraday=1&days=${days}`)
   if (!res.ok) throw new Error(`Intraday fetch failed for ${key}: ${res.status}`)
   const data = await res.json()
   intraCache.set(key, { at: Date.now(), data })
