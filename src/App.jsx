@@ -23,11 +23,13 @@ import { fetchPrices } from './lib/prices'
 import { analyzeSMC } from './lib/smc'
 import SmcChart from './components/SmcChart'
 import NewsTab from './components/NewsTab'
+import InfoTab from './components/InfoTab'
 import Dashboard from './components/Dashboard'
 
 const STARTER_WATCHLIST = ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'ZENA']
 const TABS = [
   'Overview',
+  'Info',
   'Insider Trades',
   'Institutional Ownership',
   'Short Interest',
@@ -46,6 +48,11 @@ function fmtTpRate(tpRate) {
   if (tpRate == null) return '—'
   const pct = tpRate <= 1 ? tpRate * 100 : tpRate
   return `${pct.toFixed(1)}%`
+}
+
+function fmtPrice(v) {
+  if (v == null || isNaN(v)) return '—'
+  return `$${v.toFixed(2)}`
 }
 
 function FactCard({ label, fact, money }) {
@@ -87,7 +94,7 @@ function SourceNote({ entry }) {
 }
 
 function AppInner() {
-  const { user, profile, isAdmin, signOut } = useAuth()
+  const { user, profile, isAdmin, signOut, recovery } = useAuth()
   const [authOpen, setAuthOpen] = useState(false)
   const [showAdmin, setShowAdmin] = useState(false)
   const [showDashboard, setShowDashboard] = useState(false)
@@ -262,7 +269,12 @@ function AppInner() {
           )}
         </div>
       </header>
-      {authOpen && <AuthModal onClose={() => setAuthOpen(false)} />}
+      {(authOpen || recovery) && (
+        <AuthModal
+          initialMode={recovery ? 'newpassword' : 'login'}
+          onClose={() => setAuthOpen(false)}
+        />
+      )}
 
       {showAdmin && isAdmin ? (
         <AdminPanel />
@@ -379,13 +391,81 @@ function AppInner() {
             </section>
           )}
 
+          {tab === 'Info' && (
+            <section>
+              <InfoTab
+                company={company}
+                prices={prices}
+                sharesOutstanding={snapshot?.sharesOutstanding?.val ?? null}
+              />
+            </section>
+          )}
+
           {tab === 'Insider Trades' && (
             <section>
               {(() => {
                 const real = insiderData[company.ticker]
                 if (real && real.length > 0) {
+                  const marketBuys = real.filter((r) => r.code === 'P')
+                  const buyShares = marketBuys.reduce((s, r) => s + r.shares, 0)
+                  const buyAvg =
+                    buyShares > 0
+                      ? marketBuys.reduce((s, r) => s + r.shares * r.price, 0) / buyShares
+                      : null
+                  const buyDates = marketBuys.map((r) => r.date).sort()
+                  const byInsider = [
+                    ...marketBuys
+                      .reduce((m, r) => {
+                        const cur = m.get(r.insider) || {
+                          insider: r.insider,
+                          role: r.role,
+                          shares: 0,
+                          weighted: 0,
+                          buys: 0,
+                          latest: r.date,
+                        }
+                        cur.shares += r.shares
+                        cur.weighted += r.shares * r.price
+                        cur.buys += 1
+                        if (r.date > cur.latest) cur.latest = r.date
+                        m.set(r.insider, cur)
+                        return m
+                      }, new Map())
+                      .values(),
+                  ].sort((a, b) => b.shares - a.shares)
                   return (
                     <>
+                      <h3>Insider buying — real prices from Form 4</h3>
+                      {marketBuys.length > 0 ? (
+                        <>
+                          <p>
+                            {fmtNum(marketBuys.length)} open-market purchases ·{' '}
+                            {fmtNum(buyShares)} shares bought at a weighted average of{' '}
+                            {fmtPrice(buyAvg)} · {buyDates[0]} to{' '}
+                            {buyDates[buyDates.length - 1]}
+                          </p>
+                          <table>
+                            <thead>
+                              <tr><th>Insider</th><th>Role</th><th>Shares bought</th><th>Avg buy price</th><th>Buys</th><th>Most recent buy</th></tr>
+                            </thead>
+                            <tbody>
+                              {byInsider.map((b) => (
+                                <tr key={b.insider}>
+                                  <td>{b.insider}</td><td>{b.role}</td>
+                                  <td>{fmtNum(b.shares)}</td>
+                                  <td>{fmtPrice(b.shares > 0 ? b.weighted / b.shares : null)}</td>
+                                  <td>{fmtNum(b.buys)}</td><td>{b.latest}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </>
+                      ) : (
+                        <p>
+                          No open-market insider purchases in the recent filings — buys shown
+                          anywhere else would be grants or option exercises, not market buys.
+                        </p>
+                      )}
                       <table>
                         <thead>
                           <tr><th>Date</th><th>Insider</th><th>Role</th><th>Type</th><th>Shares</th><th>Price</th><th>Value</th></tr>
@@ -459,6 +539,18 @@ function AppInner() {
                     totalShares > 0
                       ? `${((bySize.slice(0, n).reduce((s, r) => s + r.shares, 0) / totalShares) * 100).toFixed(1)}%`
                       : '—'
+                  const commonRows = real.filter((r) => r.type === 'Shares')
+                  const markShares = commonRows.reduce((s, r) => s + r.shares, 0)
+                  const markValue = commonRows.reduce((s, r) => s + r.value, 0)
+                  const holderMark = markShares > 0 ? markValue / markShares : null
+                  const lastClose =
+                    prices && prices.daily && prices.daily.length > 0
+                      ? prices.daily[prices.daily.length - 1].c
+                      : null
+                  const markDiffPct =
+                    holderMark != null && lastClose != null
+                      ? ((lastClose - holderMark) / holderMark) * 100
+                      : null
                   return (
                     <>
                       <p>
@@ -506,7 +598,29 @@ function AppInner() {
                           value={topShare(10)}
                           meta="of reported shares held by the 10 largest holders"
                         />
+                        <StatCard
+                          label="Avg holder mark"
+                          value={fmtPrice(holderMark)}
+                          meta={
+                            markDiffPct != null ? (
+                              <span>
+                                now {fmtPrice(lastClose)} ·{' '}
+                                <span className={markDiffPct >= 0 ? 'buy' : 'sell'}>
+                                  {markDiffPct >= 0 ? '+' : '−'}
+                                  {Math.abs(markDiffPct).toFixed(1)}% vs mark
+                                </span>
+                              </span>
+                            ) : (
+                              'period-end reported value ÷ shares'
+                            )
+                          }
+                        />
                       </div>
+                      <p className="source-note">
+                        Avg holder mark = total period-end reported value ÷ total shares across
+                        common-stock (Shares) positions only — an estimate of where holders were
+                        marked at quarter-end, not their purchase cost.
+                      </p>
                       <table>
                         <thead>
                           <tr><th>Holder</th><th>Type</th><th>Shares</th><th>Change</th><th>Reported value</th><th>% outstanding</th><th>Period</th><th>Filed</th></tr>

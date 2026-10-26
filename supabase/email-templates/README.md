@@ -13,6 +13,17 @@ Supabase Dashboard → Authentication → Email Templates → **Confirm signup**
   real link. After confirming, the member lands back on tickpin.vercel.app
   already signed in (the app passes the site origin as the redirect).
 
+## Reset password template
+
+Supabase Dashboard → Authentication → Email Templates → **Reset password**
+
+- **Subject:** `Reset your TickPin password`
+- **Body:** paste `reset-password.html` from this folder, whole file.
+- The app's flow: Log in → "Forgot your password?" → reset email → the link
+  returns to tickpin.vercel.app, where the app detects the recovery session
+  and shows the "Choose a new password" form. No other setup needed beyond
+  the template and the project's Site URL being https://tickpin.vercel.app.
+
 ## Sender identity ("from" address)
 
 - Supabase's built-in mailer sends from a shared Supabase address and is

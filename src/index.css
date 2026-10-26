@@ -250,3 +250,13 @@ tr:last-child td { border-bottom: none; }
 .dash-news-meta { color: var(--muted); font-size: 12px; }
 .dash-news-meta strong { color: var(--accent); }
 .dash-news-title { font-size: 15px; font-weight: 600; line-height: 1.4; }
+
+/* Info tab (src/components/InfoTab.jsx) */
+.info-links { display: flex; gap: 8px; flex-wrap: wrap; margin: 18px 0 6px; }
+.info-links a {
+  background: var(--panel); color: var(--text); border: 1px solid var(--line);
+  padding: 8px 14px; border-radius: 999px; font-size: 13px; text-decoration: none;
+}
+.info-links a:hover { border-color: var(--accent); color: var(--accent); }
+.info-filings td a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.info-filings td a:hover { text-decoration: underline; }
