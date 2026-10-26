@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { sma, ema, bollinger, rsi, macd, aggregate } from '../lib/indicators'
 import { fetchIntraday } from '../lib/prices'
+import {
+  fibLevels,
+  loadDrawings,
+  pointToSegmentDistance,
+  saveDrawings,
+} from '../lib/drawings'
 import { useLang } from '../lib/i18n'
 
 // TradingView-feel interactive chart: pan / zoom / pinch, range
@@ -27,6 +33,7 @@ const C_EMA20 = '#2dd4bf'
 const C_BB = '#8b9dc3'
 const C_RSI = '#bb9af7'
 const C_SIGNAL = '#ffb84d'
+const C_DRAW = '#f5b942'
 const FONT = '"Segoe UI", system-ui, -apple-system, sans-serif'
 
 const RANGES = [
@@ -166,8 +173,20 @@ function drawProChart(canvas, cssWidth, cssHeight, heights, model) {
   ctx.font = `11px ${FONT}`
   ctx.textBaseline = 'middle'
 
-  const { series, view, inds, overlays, showVolume, showRSI, showMACD, chartType, hover, labels } =
-    model
+  const {
+    series,
+    view,
+    inds,
+    overlays,
+    showVolume,
+    showRSI,
+    showMACD,
+    chartType,
+    hover,
+    labels,
+    drawings,
+    draft,
+  } = model
   const n = series.length
 
   const plotLeft = PAD_LEFT
@@ -487,6 +506,101 @@ function drawProChart(canvas, cssWidth, cssHeight, heights, model) {
   if (overlays.sma50) drawLine(inds.sma50, C_SMA50, 1.2)
   if (overlays.ema20) drawLine(inds.ema20, C_EMA20, 1.2)
 
+  // --- Drawings (price pane only, clipped to the plot rect) ---
+  const renderDrawing = (d, isDraft) => {
+    if (!d || !d.a) return
+    const xa = xCenter(d.a.i)
+    const ya = yPrice(d.a.p)
+    ctx.save()
+    if (isDraft) {
+      ctx.globalAlpha = 0.7
+      ctx.setLineDash([5, 4])
+    }
+    // Clipped part: lines, bands, endpoint dots.
+    ctx.save()
+    ctx.beginPath()
+    ctx.rect(plotLeft, pricePane.y0, plotWidth, pricePane.y1 - pricePane.y0)
+    ctx.clip()
+    if (d.type === 'trend' && d.b) {
+      const xb = xCenter(d.b.i)
+      const yb = yPrice(d.b.p)
+      ctx.strokeStyle = C_DRAW
+      ctx.lineWidth = 1.5
+      ctx.beginPath()
+      ctx.moveTo(xa, ya)
+      ctx.lineTo(xb, yb)
+      ctx.stroke()
+      ctx.lineWidth = 1
+      ctx.fillStyle = C_DRAW
+      for (const [dx, dy] of [
+        [xa, ya],
+        [xb, yb],
+      ]) {
+        ctx.beginPath()
+        ctx.arc(dx, dy, 3, 0, Math.PI * 2)
+        ctx.fill()
+      }
+    } else if (d.type === 'hline') {
+      ctx.strokeStyle = C_DRAW
+      ctx.lineWidth = 1
+      ctx.beginPath()
+      ctx.moveTo(plotLeft, ya)
+      ctx.lineTo(plotRight, ya)
+      ctx.stroke()
+    } else if (d.type === 'fib' && d.b) {
+      const levels = fibLevels(d.a.p, d.b.p)
+      const xFrom = Math.max(plotLeft, xCenter(Math.min(d.a.i, d.b.i)))
+      // Very light alternating band fills between consecutive levels.
+      for (let k = 0; k + 1 < levels.length; k += 2) {
+        const yTop = yPrice(levels[k].price)
+        const yBot = yPrice(levels[k + 1].price)
+        ctx.fillStyle = 'rgba(245, 185, 66, 0.05)'
+        ctx.fillRect(xFrom, Math.min(yTop, yBot), plotRight - xFrom, Math.abs(yBot - yTop))
+      }
+      ctx.font = `10px ${FONT}`
+      ctx.textAlign = 'left'
+      for (const lv of levels) {
+        const yy = yPrice(lv.price)
+        ctx.strokeStyle = 'rgba(245, 185, 66, 0.8)'
+        ctx.lineWidth = 1
+        ctx.beginPath()
+        ctx.moveTo(xFrom, yy)
+        ctx.lineTo(plotRight, yy)
+        ctx.stroke()
+        ctx.fillStyle = TEXT_BRIGHT
+        ctx.fillText(`${(lv.ratio * 100).toFixed(1)}% ${formatPrice(lv.price)}`, xFrom + 4, yy - 6)
+      }
+      ctx.font = `11px ${FONT}`
+      ctx.fillStyle = C_DRAW
+      for (const [dx, dy] of [
+        [xa, ya],
+        [xCenter(d.b.i), yPrice(d.b.p)],
+      ]) {
+        ctx.beginPath()
+        ctx.arc(dx, dy, 3, 0, Math.PI * 2)
+        ctx.fill()
+      }
+    }
+    ctx.restore()
+    // Unclipped part: the horizontal line's right-axis price tag.
+    if (d.type === 'hline' && ya >= pricePane.y0 - 8 && ya <= pricePane.y1 + 8) {
+      const label = formatPrice(d.a.p)
+      ctx.font = `700 10.5px ${FONT}`
+      ctx.fillStyle = C_DRAW
+      pillPath(ctx, plotRight + 2, ya - 8, PAD_RIGHT - 4, 16, 3)
+      ctx.fill()
+      ctx.fillStyle = '#0b1220'
+      ctx.textAlign = 'center'
+      ctx.fillText(label, plotRight + 2 + (PAD_RIGHT - 4) / 2, ya + 0.5)
+      ctx.font = `11px ${FONT}`
+    }
+    ctx.restore()
+  }
+  if (Array.isArray(drawings)) {
+    for (const d of drawings) renderDrawing(d, false)
+  }
+  if (draft) renderDrawing(draft, true)
+
   // --- Volume pane ---
   const volPane = panes.find((p) => p.kind === 'volume')
   if (volPane && volMax > 0) {
@@ -704,6 +818,43 @@ export default function ProChart({ candles, ticker }) {
     setHoverState(h)
   }
 
+  // --- Drawing layer (trend / hline / fib / erase) ---
+  // Anchors live in daily-series coordinates ({ i, p }); the list is
+  // persisted per ticker in localStorage via src/lib/drawings.js.
+  const [tool, setTool] = useState('cursor')
+  const [drawings, setDrawings] = useState(() => loadDrawings(ticker))
+  const [draft, setDraftState] = useState(null)
+  const toolRef = useRef('cursor')
+  const scopeRef = useRef(false)
+  const drawingsRef = useRef(drawings)
+  const draftRef = useRef(null)
+  const tickerRef = useRef(ticker)
+
+  const setDraft = (d) => {
+    draftRef.current = d
+    setDraftState(d)
+  }
+  const commitDrawing = (d) => {
+    const next = [...drawingsRef.current, d]
+    drawingsRef.current = next
+    setDrawings(next)
+    saveDrawings(tickerRef.current, next)
+  }
+  const removeDrawingById = (id) => {
+    const next = drawingsRef.current.filter((x) => x.id !== id)
+    if (next.length === drawingsRef.current.length) return
+    drawingsRef.current = next
+    setDrawings(next)
+    saveDrawings(tickerRef.current, next)
+  }
+  const clearAllDrawings = () => {
+    drawingsRef.current = []
+    setDrawings([])
+    saveDrawings(tickerRef.current, [])
+  }
+  const newDrawingId = () =>
+    `d${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7)}`
+
   const dailySeries = useMemo(() => {
     if (!Array.isArray(candles)) return []
     if (interval === 'W') return aggregate(candles, 'week')
@@ -806,10 +957,42 @@ export default function ProChart({ candles, ticker }) {
     return () => observer.disconnect()
   }, [])
 
+  // Drawings are anchored in the daily series, so they are only
+  // shown (and editable) in the plain daily range view.
+  const drawingsVisible = mode === 'range' && interval === 'D'
+
+  // Reload this ticker's drawings when the ticker changes (the
+  // component normally remounts per ticker, but stay safe).
+  useEffect(() => {
+    tickerRef.current = ticker
+    const loaded = loadDrawings(ticker)
+    drawingsRef.current = loaded
+    setDrawings(loaded)
+    setDraft(null)
+    setTool('cursor')
+  }, [ticker])
+
   // Keep refs fresh for the pointer handlers.
   useEffect(() => {
     seriesRef.current = series
+    toolRef.current = tool
+    scopeRef.current = drawingsVisible
+    drawingsRef.current = drawings
+    draftRef.current = draft
+    tickerRef.current = ticker
   })
+
+  // Esc cancels any draft and returns to the Select tool.
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        setDraft(null)
+        setTool('cursor')
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
 
   // Draw after every render (state-driven redraw: view, hover, toggles).
   useEffect(() => {
@@ -825,6 +1008,8 @@ export default function ProChart({ candles, ticker }) {
       showMACD,
       chartType,
       hover,
+      drawings: drawingsVisible ? drawings : [],
+      draft: drawingsVisible ? draft : null,
       labels: {
         noData: t('chart.noData'),
         vol: t('chart.vol'),
@@ -845,6 +1030,7 @@ export default function ProChart({ candles, ticker }) {
     let startView = null
     let pinchDist = 0
     let pinchAnchor = 0 // fractional bar index under the pinch midpoint
+    let drawActive = false // a trend/fib draft is being dragged out
 
     const pos = (e) => {
       const r = canvas.getBoundingClientRect()
@@ -858,10 +1044,106 @@ export default function ProChart({ candles, ticker }) {
       return Math.min(s.length - 1, Math.max(0, idx))
     }
 
+    // --- Drawing geometry (inverts the draw's own scales) ---
+    const paneOf = () => {
+      const L = layoutRef.current
+      if (!L || !L.barWidth || !L.panes || !L.panes[0]) return null
+      const pane = L.panes[0]
+      if (pane.min === undefined || pane.max === undefined) return null
+      return { L, pane }
+    }
+    const pxOf = (a) => {
+      const g = paneOf()
+      if (!g) return null
+      const { L, pane } = g
+      return {
+        x: L.plotLeft + (a.i - L.viewFirst + 0.5) * L.barWidth,
+        y: pane.y0 + ((pane.max - a.p) / (pane.max - pane.min)) * (pane.y1 - pane.y0),
+      }
+    }
+    // Pixel -> anchor: index snaps to the nearest bar; price snaps to
+    // that bar's nearest o/h/l/c when within 8px, else stays free.
+    const anchorAt = (x, y) => {
+      const g = paneOf()
+      const s = seriesRef.current
+      if (!g || s.length === 0) return null
+      const { L, pane } = g
+      const fi = L.viewFirst + (x - L.plotLeft) / L.barWidth - 0.5
+      let price = pane.max - ((y - pane.y0) / (pane.y1 - pane.y0)) * (pane.max - pane.min)
+      const bi = Math.min(s.length - 1, Math.max(0, Math.round(fi)))
+      const bar = s[bi]
+      if (bar) {
+        let best = null
+        let bestD = 8
+        for (const v of [bar.o, bar.h, bar.l, bar.c]) {
+          const vv = num(v)
+          if (vv === null) continue
+          const py = pane.y0 + ((pane.max - vv) / (pane.max - pane.min)) * (pane.y1 - pane.y0)
+          const d = Math.abs(py - y)
+          if (d <= bestD) {
+            bestD = d
+            best = vv
+          }
+        }
+        if (best !== null) price = best
+      }
+      return { i: bi, p: price }
+    }
+    // Nearest drawing within 7px of a pixel point, or null.
+    const hitTest = (x, y) => {
+      let best = null
+      let bestD = 7
+      for (const d of drawingsRef.current) {
+        let dist = Infinity
+        if (d.type === 'trend' && d.b) {
+          const A = pxOf(d.a)
+          const B = pxOf(d.b)
+          if (A && B) dist = pointToSegmentDistance(x, y, A.x, A.y, B.x, B.y)
+        } else if (d.type === 'hline') {
+          const A = pxOf(d.a)
+          if (A) dist = Math.abs(y - A.y)
+        } else if (d.type === 'fib' && d.b) {
+          for (const lv of fibLevels(d.a.p, d.b.p)) {
+            const A = pxOf({ i: d.a.i, p: lv.price })
+            if (A) dist = Math.min(dist, Math.abs(y - A.y))
+          }
+        }
+        if (dist <= bestD) {
+          bestD = dist
+          best = d
+        }
+      }
+      return best
+    }
+
     const onDown = (e) => {
       canvas.setPointerCapture(e.pointerId)
       const p = pos(e)
       pointers.set(e.pointerId, p)
+      // Drawing tools intercept the gesture before pan/pinch whenever
+      // the drawing layer is in scope (daily range view).
+      if (toolRef.current !== 'cursor' && scopeRef.current) {
+        if (pointers.size === 1) {
+          const toolNow = toolRef.current
+          if (toolNow === 'erase') {
+            const hit = hitTest(p.x, p.y)
+            if (hit) removeDrawingById(hit.id)
+          } else if (toolNow === 'hline') {
+            const a = anchorAt(p.x, p.y)
+            if (a) {
+              commitDrawing({ id: newDrawingId(), type: 'hline', a: { i: 0, p: a.p }, b: null })
+              setTool('cursor')
+            }
+          } else if (toolNow === 'trend' || toolNow === 'fib') {
+            const a = anchorAt(p.x, p.y)
+            if (a) {
+              drawActive = true
+              setDraft({ type: toolNow, a, b: a })
+            }
+          }
+        }
+        return
+      }
       if (pointers.size === 2) {
         mode = 'pinch'
         const [a, b] = [...pointers.values()]
@@ -883,6 +1165,11 @@ export default function ProChart({ candles, ticker }) {
     const onMove = (e) => {
       const p = pos(e)
       if (pointers.has(e.pointerId)) pointers.set(e.pointerId, p)
+      // A drawing draft's second anchor follows the pointer.
+      if (drawActive && draftRef.current) {
+        const a = anchorAt(p.x, p.y)
+        if (a) setDraft({ ...draftRef.current, b: a })
+      }
       const L = layoutRef.current
       const s = seriesRef.current
       if (mode === 'pinch' && pointers.size === 2 && L && L.barWidth && startView) {
@@ -909,6 +1196,10 @@ export default function ProChart({ candles, ticker }) {
         if (idx !== null) setHover({ idx, y: p.y })
         return
       }
+      // Erase tool: pointer cursor when hovering a drawing.
+      if (toolRef.current === 'erase' && scopeRef.current && pointers.size === 0) {
+        canvas.style.cursor = hitTest(p.x, p.y) ? 'pointer' : ''
+      }
       // Hover (no buttons down).
       const idx = idxAt(p.x)
       if (idx !== null) {
@@ -921,6 +1212,17 @@ export default function ProChart({ candles, ticker }) {
 
     const onUp = (e) => {
       pointers.delete(e.pointerId)
+      // Commit a finished trend/fib draft (a plain click with A == B
+      // is discarded), then fall back to the Select tool.
+      if (drawActive && pointers.size === 0) {
+        drawActive = false
+        const d = draftRef.current
+        setDraft(null)
+        if (d && d.b && (d.a.i !== d.b.i || d.a.p !== d.b.p)) {
+          commitDrawing({ id: newDrawingId(), type: d.type, a: d.a, b: d.b })
+        }
+        setTool('cursor')
+      }
       if (pointers.size < 2 && mode === 'pinch') mode = null
       if (pointers.size === 0) mode = null
     }
@@ -1056,6 +1358,26 @@ export default function ProChart({ candles, ticker }) {
         </div>
       </div>
 
+      <div className="pro-toolbar">
+        <div className="pro-group">
+          {[
+            { id: 'cursor', key: 'chart.toolSelect' },
+            { id: 'trend', key: 'chart.toolTrend' },
+            { id: 'hline', key: 'chart.toolHline' },
+            { id: 'fib', key: 'chart.toolFib' },
+            { id: 'erase', key: 'chart.toolErase' },
+          ].map((tl) => (
+            <button key={tl.id} className={chip(tool === tl.id)} onClick={() => setTool(tl.id)}>
+              {t(tl.key)}
+            </button>
+          ))}
+        </div>
+        <button className="pro-chip" onClick={clearAllDrawings} disabled={drawings.length === 0}>
+          {t('chart.clearDrawings')}
+        </button>
+      </div>
+      {tool !== 'cursor' && drawingsVisible && <p className="pro-draw-hint">{t('chart.drawHint')}</p>}
+
       {mode === 'today' && intra.status === 'loading' && intra.candles.length === 0 && (
         <p>{t('chart.todayLoading')}</p>
       )}
@@ -1063,7 +1385,11 @@ export default function ProChart({ candles, ticker }) {
         <p className="error">{t('chart.todayError')}</p>
       )}
 
-      <div className="pro-stage" ref={wrapRef} style={{ height: `${heights.total}px` }}>
+      <div
+        className={`pro-stage${tool !== 'cursor' && drawingsVisible ? ' drawing' : ''}`}
+        ref={wrapRef}
+        style={{ height: `${heights.total}px` }}
+      >
         <canvas ref={canvasRef} className="pro-canvas" />
         {legendBar && (
           <div className="pro-legend">

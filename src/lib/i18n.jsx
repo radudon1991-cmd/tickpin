@@ -340,6 +340,16 @@ const STRINGS = {
   'chart.close': { en: 'C', th: 'ปิด' },
   'chart.vol': { en: 'Vol', th: 'ปริมาณ' },
   'chart.noData': { en: 'No price data', th: 'ไม่มีข้อมูลราคา' },
+  'chart.toolSelect': { en: 'Select', th: 'เลือก' },
+  'chart.toolTrend': { en: 'Trend line', th: 'เส้นแนวโน้ม' },
+  'chart.toolHline': { en: 'Horizontal line', th: 'เส้นแนวนอน' },
+  'chart.toolFib': { en: 'Fibonacci', th: 'ฟีโบนัชชี' },
+  'chart.toolErase': { en: 'Erase', th: 'ลบเส้น' },
+  'chart.clearDrawings': { en: 'Clear all', th: 'ลบทั้งหมด' },
+  'chart.drawHint': {
+    en: 'Click on the chart to draw — Esc to cancel',
+    th: 'คลิกบนกราฟเพื่อวาดเส้น — กด Esc เพื่อยกเลิก',
+  },
 
   // ---- news ------------------------------------------------------------------
   'news.loading': { en: 'Loading news for {ticker}…', th: 'กำลังโหลดข่าวของ {ticker}…' },

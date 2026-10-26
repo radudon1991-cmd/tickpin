@@ -377,3 +377,7 @@ button.pro-chip {
   width: 76px; padding: 6px 8px; border-radius: 999px; font: inherit; font-size: 13px;
   background: var(--bg); border: 1px solid var(--line); color: var(--text);
 }
+
+/* ProChart drawing tools */
+.pro-stage.drawing canvas { cursor: crosshair; }
+.pro-draw-hint { color: var(--muted); font-size: 12px; margin: 0 2px 8px; }
