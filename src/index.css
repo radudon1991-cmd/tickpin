@@ -102,3 +102,82 @@ tr:last-child td { border-bottom: none; }
   .search-zone h1 { font-size: 25px; }
   .brand-sub { display: none; }
 }
+
+/* --- accounts (Supabase auth) --- */
+.topbar-auth { display: flex; align-items: center; gap: 8px; }
+.topbar-auth button {
+  background: transparent; border: 1px solid var(--border, #d0d7de); border-radius: 6px;
+  padding: 6px 12px; cursor: pointer; font: inherit; color: inherit;
+}
+.topbar-auth .primary-btn, .primary-btn {
+  background: #005cab; color: #fff; border: 1px solid #005cab; border-radius: 6px;
+  padding: 8px 14px; cursor: pointer; font: inherit;
+}
+.topbar-user { font-weight: 600; }
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5);
+  display: flex; align-items: flex-start; justify-content: center; padding: 48px 16px; z-index: 50;
+}
+.modal {
+  background: #fff; color: #1a1a1a; border-radius: 12px; padding: 24px;
+  width: 100%; max-width: 380px; position: relative; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+.modal h3 { margin: 0 0 16px; }
+.modal-close {
+  position: absolute; top: 8px; right: 12px; background: none; border: none;
+  font-size: 24px; cursor: pointer; color: inherit;
+}
+.modal form { display: flex; flex-direction: column; gap: 10px; }
+.modal input {
+  padding: 10px 12px; border: 1px solid #d0d7de; border-radius: 6px; font: inherit;
+}
+.google-btn {
+  width: 100%; padding: 10px 12px; border: 1px solid #d0d7de; border-radius: 6px;
+  background: #fff; cursor: pointer; font: inherit; font-weight: 600;
+}
+.modal-divider { text-align: center; margin: 14px 0; opacity: 0.6; font-size: 0.9em; }
+.modal-switch { text-align: center; margin: 14px 0 0; }
+.modal-switch button {
+  background: none; border: none; color: #005cab; cursor: pointer; font: inherit;
+  text-decoration: underline; padding: 0;
+}
+.notice { color: #1a7f37; }
+.watch-btn {
+  margin-left: 12px; background: transparent; border: 1px solid var(--border, #d0d7de);
+  border-radius: 6px; padding: 4px 10px; cursor: pointer; font: inherit; color: inherit;
+}
+.admin-panel table { border-collapse: collapse; width: 100%; }
+.admin-panel th, .admin-panel td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border, #e5e7eb); }
+
+/* --- SMC Analysis tab --- */
+.smc-chart-wrap {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+.smc-chart-wrap canvas {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+.smc-panel { margin-top: 16px; margin-bottom: 16px; }
+.smc-panel h3 { margin: 0 0 12px; font-size: 17px; }
+.smc-check { list-style: none; margin: 0; padding: 0; }
+.smc-check li {
+  display: flex; align-items: baseline; gap: 10px;
+  padding: 9px 12px; border-bottom: 1px solid var(--line);
+  background: var(--panel); font-size: 14px;
+}
+.smc-check li:first-child { border-radius: 12px 12px 0 0; }
+.smc-check li:last-child { border-bottom: none; border-radius: 0 0 12px 12px; }
+.smc-status { font-weight: 700; min-width: 16px; text-align: center; }
+.smc-status.ok { color: var(--green); }
+.smc-status.wait { color: var(--muted); }
+.smc-check-label { font-weight: 600; }
+.smc-check-detail { color: var(--muted); }
+.smc-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+@media (max-width: 640px) {
+  .smc-cols { grid-template-columns: 1fr; }
+}
