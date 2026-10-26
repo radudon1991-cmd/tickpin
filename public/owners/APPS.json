@@ -1,0 +1,2282 @@
+[
+ {
+  "holder": "BlackRock, Inc.",
+  "type": "Shares",
+  "shares": 9353236,
+  "change": 698980,
+  "value": 120656745,
+  "pctOut": 7.73,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-07"
+ },
+ {
+  "holder": "Vanguard Group Inc",
+  "type": "Shares",
+  "shares": 9101779,
+  "change": 29540,
+  "value": 45508895,
+  "pctOut": 7.53,
+  "filed": "Q4 2025",
+  "fileDate": "2026-01-29"
+ },
+ {
+  "holder": "AIGH Capital Management LLC",
+  "type": "Shares",
+  "shares": 6548450,
+  "change": 1652678,
+  "value": 84475005,
+  "pctOut": 5.41,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-07"
+ },
+ {
+  "holder": "D. E. Shaw & Co., Inc.",
+  "type": "Shares",
+  "shares": 5071927,
+  "change": 4781827,
+  "value": 65427858,
+  "pctOut": 4.19,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "VANGUARD CAPITAL MANAGEMENT LLC",
+  "type": "Shares",
+  "shares": 4981106,
+  "change": 4981106,
+  "value": 64256267,
+  "pctOut": 4.12,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "VANGUARD PORTFOLIO MANAGEMENT LLC",
+  "type": "Shares",
+  "shares": 4315867,
+  "change": 4315867,
+  "value": 55674684,
+  "pctOut": 3.57,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "Granahan Investment Management, LLC",
+  "type": "Shares",
+  "shares": 3494200,
+  "change": -3618151,
+  "value": 45075180,
+  "pctOut": 2.89,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "GEODE CAPITAL MANAGEMENT, LLC",
+  "type": "Shares",
+  "shares": 2914508,
+  "change": 317527,
+  "value": 37605213,
+  "pctOut": 2.41,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "TWO SIGMA INVESTMENTS, LP",
+  "type": "Shares",
+  "shares": 2803368,
+  "change": 1250778,
+  "value": 36163447,
+  "pctOut": 2.32,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "STATE STREET CORP",
+  "type": "Shares",
+  "shares": 2650488,
+  "change": -293482,
+  "value": 34191295,
+  "pctOut": 2.19,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-07"
+ },
+ {
+  "holder": "BANK OF AMERICA CORP /DE/",
+  "type": "Shares",
+  "shares": 2617867,
+  "change": -1001304,
+  "value": 33770485,
+  "pctOut": 2.16,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "ARROWSTREET CAPITAL, LIMITED PARTNERSHIP",
+  "type": "Shares",
+  "shares": 2382180,
+  "change": 921925,
+  "value": 30730122,
+  "pctOut": 1.97,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "Invesco Ltd.",
+  "type": "Shares",
+  "shares": 2237315,
+  "change": 2237315,
+  "value": 28861363,
+  "pctOut": 1.85,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "DIMENSIONAL FUND ADVISORS LP",
+  "type": "Shares",
+  "shares": 2030466,
+  "change": -323128,
+  "value": 26193116,
+  "pctOut": 1.68,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-11"
+ },
+ {
+  "holder": "RENAISSANCE TECHNOLOGIES LLC",
+  "type": "Shares",
+  "shares": 2003000,
+  "change": 1720200,
+  "value": 25838700,
+  "pctOut": 1.66,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "UBS Group AG",
+  "type": "Shares",
+  "shares": 1733765,
+  "change": 981439,
+  "value": 22365569,
+  "pctOut": 1.43,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "JANE STREET GROUP, LLC",
+  "type": "Shares",
+  "shares": 1732561,
+  "change": 93819,
+  "value": 22350037,
+  "pctOut": 1.43,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "JANE STREET GROUP, LLC",
+  "type": "Call",
+  "shares": 1387300,
+  "change": 1250400,
+  "value": 17896170,
+  "pctOut": 1.15,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "GOLDMAN SACHS GROUP INC",
+  "type": "Shares",
+  "shares": 1349350,
+  "change": -1432802,
+  "value": 17406615,
+  "pctOut": 1.12,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "SILVERCREST ASSET MANAGEMENT GROUP LLC",
+  "type": "Shares",
+  "shares": 1053466,
+  "change": 117422,
+  "value": 13589711,
+  "pctOut": 0.87,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Manatuck Hill Partners, LLC",
+  "type": "Shares",
+  "shares": 1043461,
+  "change": -309956,
+  "value": 13460647,
+  "pctOut": 0.86,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Nuveen, LLC",
+  "type": "Shares",
+  "shares": 998579,
+  "change": 752488,
+  "value": 12881669,
+  "pctOut": 0.83,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-11"
+ },
+ {
+  "holder": "NORTHERN TRUST CORP",
+  "type": "Shares",
+  "shares": 960262,
+  "change": 66518,
+  "value": 12387380,
+  "pctOut": 0.79,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "CHARLES SCHWAB INVESTMENT MANAGEMENT INC",
+  "type": "Shares",
+  "shares": 912048,
+  "change": 37679,
+  "value": 11765419,
+  "pctOut": 0.75,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "AQR CAPITAL MANAGEMENT LLC",
+  "type": "Shares",
+  "shares": 883138,
+  "change": 175861,
+  "value": 11392481,
+  "pctOut": 0.73,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "SUSQUEHANNA INTERNATIONAL GROUP, LLP",
+  "type": "Call",
+  "shares": 829900,
+  "change": 265900,
+  "value": 10705710,
+  "pctOut": 0.69,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "TUDOR INVESTMENT CORP ET AL",
+  "type": "Shares",
+  "shares": 794888,
+  "change": 186019,
+  "value": 10254055,
+  "pctOut": 0.66,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "JPMORGAN CHASE & CO",
+  "type": "Shares",
+  "shares": 750080,
+  "change": -405744,
+  "value": 9683532,
+  "pctOut": 0.62,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "VANGUARD FIDUCIARY TRUST CO",
+  "type": "Shares",
+  "shares": 724126,
+  "change": 724126,
+  "value": 9341225,
+  "pctOut": 0.6,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "RAYMOND JAMES FINANCIAL INC",
+  "type": "Shares",
+  "shares": 564978,
+  "change": 269323,
+  "value": 7288216,
+  "pctOut": 0.47,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "HERALD INVESTMENT MANAGEMENT Ltd",
+  "type": "Shares",
+  "shares": 550329,
+  "change": -37500,
+  "value": 7093741,
+  "pctOut": 0.46,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-23"
+ },
+ {
+  "holder": "MORGAN STANLEY",
+  "type": "Shares",
+  "shares": 540865,
+  "change": 315051,
+  "value": 6977161,
+  "pctOut": 0.45,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "CITADEL ADVISORS LLC",
+  "type": "Shares",
+  "shares": 539355,
+  "change": -526788,
+  "value": 6957680,
+  "pctOut": 0.45,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "HARBOR CAPITAL ADVISORS, INC.",
+  "type": "Shares",
+  "shares": 500113,
+  "change": -586513,
+  "value": 6451,
+  "pctOut": 0.41,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-07"
+ },
+ {
+  "holder": "S SQUARED TECHNOLOGY, LLC",
+  "type": "Shares",
+  "shares": 454333,
+  "change": -308461,
+  "value": 5860896,
+  "pctOut": 0.38,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Bank of New York Mellon Corp",
+  "type": "Shares",
+  "shares": 416626,
+  "change": 28837,
+  "value": 5374477,
+  "pctOut": 0.34,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-06"
+ },
+ {
+  "holder": "CITADEL ADVISORS LLC",
+  "type": "Call",
+  "shares": 408400,
+  "change": 270700,
+  "value": 5268360,
+  "pctOut": 0.34,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "GLOBEFLEX CAPITAL L P",
+  "type": "Shares",
+  "shares": 367860,
+  "change": -58046,
+  "value": 4745394,
+  "pctOut": 0.3,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "Point72 Asset Management, L.P.",
+  "type": "Call",
+  "shares": 303500,
+  "change": 266700,
+  "value": 3915150,
+  "pctOut": 0.25,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "SUSQUEHANNA INTERNATIONAL GROUP, LLP",
+  "type": "Put",
+  "shares": 278500,
+  "change": -62400,
+  "value": 3592650,
+  "pctOut": 0.23,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "SEGALL BRYANT & HAMILL, LLC",
+  "type": "Shares",
+  "shares": 267966,
+  "change": -177595,
+  "value": 3456761,
+  "pctOut": 0.22,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "Squarepoint Ops LLC",
+  "type": "Shares",
+  "shares": 265857,
+  "change": -12726,
+  "value": 3429555,
+  "pctOut": 0.22,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Inspire Investing, LLC",
+  "type": "Shares",
+  "shares": 258984,
+  "change": 258984,
+  "value": 3340894,
+  "pctOut": 0.21,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "CITIGROUP INC",
+  "type": "Shares",
+  "shares": 228296,
+  "change": 213979,
+  "value": 2945018,
+  "pctOut": 0.19,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-03"
+ },
+ {
+  "holder": "Decker Retirement Planning Inc.",
+  "type": "Shares",
+  "shares": 211376,
+  "change": 211376,
+  "value": 2726750,
+  "pctOut": 0.17,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-16"
+ },
+ {
+  "holder": "Qube Research & Technologies Ltd",
+  "type": "Shares",
+  "shares": 202074,
+  "change": 128200,
+  "value": 2606755,
+  "pctOut": 0.17,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Panoramic Capital, LLC",
+  "type": "Shares",
+  "shares": 195000,
+  "change": 195000,
+  "value": 2515500,
+  "pctOut": 0.16,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "PRICE T ROWE ASSOCIATES INC /MD/",
+  "type": "Shares",
+  "shares": 189082,
+  "change": 28872,
+  "value": 2440,
+  "pctOut": 0.16,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "PRUDENTIAL FINANCIAL INC",
+  "type": "Shares",
+  "shares": 185715,
+  "change": 123970,
+  "value": 2395724,
+  "pctOut": 0.15,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "XTX Topco Ltd",
+  "type": "Shares",
+  "shares": 178107,
+  "change": -15255,
+  "value": 2297580,
+  "pctOut": 0.15,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "G2 Investment Partners Management LLC",
+  "type": "Shares",
+  "shares": 175000,
+  "change": -625000,
+  "value": 2257500,
+  "pctOut": 0.14,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "WELLS FARGO & COMPANY/MN",
+  "type": "Shares",
+  "shares": 155532,
+  "change": 54637,
+  "value": 2006364,
+  "pctOut": 0.13,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "JANE STREET GROUP, LLC",
+  "type": "Put",
+  "shares": 153800,
+  "change": 116500,
+  "value": 1984020,
+  "pctOut": 0.13,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "GILDER GAGNON HOWE & CO LLC",
+  "type": "Shares",
+  "shares": 153099,
+  "change": 153099,
+  "value": 1974977,
+  "pctOut": 0.13,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "CITADEL ADVISORS LLC",
+  "type": "Put",
+  "shares": 152100,
+  "change": 58800,
+  "value": 1962090,
+  "pctOut": 0.13,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "RHUMBLINE ADVISERS",
+  "type": "Shares",
+  "shares": 149841,
+  "change": 19958,
+  "value": 1932938,
+  "pctOut": 0.12,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "Universal- Beteiligungs- und Servicegesellschaft mbH",
+  "type": "Shares",
+  "shares": 149569,
+  "change": -154930,
+  "value": 1929440,
+  "pctOut": 0.12,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-06"
+ },
+ {
+  "holder": "Baader Bank Aktiengesellschaft",
+  "type": "Shares",
+  "shares": 149569,
+  "change": -153633,
+  "value": 1929440,
+  "pctOut": 0.12,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-23"
+ },
+ {
+  "holder": "BOOTHBAY FUND MANAGEMENT, LLC",
+  "type": "Shares",
+  "shares": 146937,
+  "change": -68365,
+  "value": 1895487,
+  "pctOut": 0.12,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "FULLER & THALER ASSET MANAGEMENT, INC.",
+  "type": "Shares",
+  "shares": 146320,
+  "change": 7700,
+  "value": 1887528,
+  "pctOut": 0.12,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "ROYCE & ASSOCIATES LP",
+  "type": "Shares",
+  "shares": 141031,
+  "change": 141031,
+  "value": 1819300,
+  "pctOut": 0.12,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "ALLIANCEBERNSTEIN L.P.",
+  "type": "Shares",
+  "shares": 140970,
+  "change": 0,
+  "value": 405994,
+  "pctOut": 0.12,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "IEQ CAPITAL, LLC",
+  "type": "Shares",
+  "shares": 139222,
+  "change": 83375,
+  "value": 1795964,
+  "pctOut": 0.12,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-11"
+ },
+ {
+  "holder": "OCCUDO QUANTITATIVE STRATEGIES LP",
+  "type": "Shares",
+  "shares": 128249,
+  "change": 128249,
+  "value": 1654412,
+  "pctOut": 0.11,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "DEUTSCHE BANK AG\\",
+  "type": "Shares",
+  "shares": 123075,
+  "change": 8779,
+  "value": 1587668,
+  "pctOut": 0.1,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-07"
+ },
+ {
+  "holder": "WINTON GROUP Ltd",
+  "type": "Shares",
+  "shares": 121796,
+  "change": 78096,
+  "value": 1571168,
+  "pctOut": 0.1,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-07"
+ },
+ {
+  "holder": "Rathbones Group PLC",
+  "type": "Shares",
+  "shares": 101015,
+  "change": 0,
+  "value": 1303093,
+  "pctOut": 0.08,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-23"
+ },
+ {
+  "holder": "Caption Management, LLC",
+  "type": "Call",
+  "shares": 100000,
+  "change": 100000,
+  "value": 1290000,
+  "pctOut": 0.08,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Schonfeld Strategic Advisors LLC",
+  "type": "Shares",
+  "shares": 99396,
+  "change": 80804,
+  "value": 1282207,
+  "pctOut": 0.08,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Headlands Technologies LLC",
+  "type": "Shares",
+  "shares": 99387,
+  "change": 99387,
+  "value": 1282092,
+  "pctOut": 0.08,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "ACADIAN ASSET MANAGEMENT LLC",
+  "type": "Shares",
+  "shares": 97567,
+  "change": 6213,
+  "value": 1257,
+  "pctOut": 0.08,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "Apis Capital Advisors, LLC",
+  "type": "Shares",
+  "shares": 88856,
+  "change": 88856,
+  "value": 1146242,
+  "pctOut": 0.07,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "GAGNON SECURITIES LLC",
+  "type": "Shares",
+  "shares": 81839,
+  "change": 0,
+  "value": 1055723,
+  "pctOut": 0.07,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-05"
+ },
+ {
+  "holder": "CAXTON ASSOCIATES LLP",
+  "type": "Shares",
+  "shares": 79833,
+  "change": 79833,
+  "value": 1029846,
+  "pctOut": 0.07,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "NATIXIS",
+  "type": "Shares",
+  "shares": 79300,
+  "change": 0,
+  "value": 1022970,
+  "pctOut": 0.07,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "SYMMETRY PEAK MANAGEMENT LLC",
+  "type": "Call",
+  "shares": 72500,
+  "change": 72500,
+  "value": 935250,
+  "pctOut": 0.06,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "CastleKnight Management LP",
+  "type": "Shares",
+  "shares": 70100,
+  "change": 0,
+  "value": 904290,
+  "pctOut": 0.06,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Brevan Howard Capital Management LP",
+  "type": "Shares",
+  "shares": 70068,
+  "change": 70068,
+  "value": 903877,
+  "pctOut": 0.06,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "MetLife Investment Management, LLC",
+  "type": "Shares",
+  "shares": 66072,
+  "change": 17745,
+  "value": 852329,
+  "pctOut": 0.05,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "FRANKLIN RESOURCES INC",
+  "type": "Shares",
+  "shares": 63069,
+  "change": 12714,
+  "value": 813590,
+  "pctOut": 0.05,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "FMR LLC",
+  "type": "Shares",
+  "shares": 61499,
+  "change": 289,
+  "value": 793340,
+  "pctOut": 0.05,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "Walleye Capital LLC",
+  "type": "Call",
+  "shares": 60400,
+  "change": -19800,
+  "value": 779160,
+  "pctOut": 0.05,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-03"
+ },
+ {
+  "holder": "BANK OF MONTREAL /CAN/",
+  "type": "Shares",
+  "shares": 58502,
+  "change": 15,
+  "value": 754676,
+  "pctOut": 0.05,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "LPL Financial LLC",
+  "type": "Shares",
+  "shares": 56572,
+  "change": -46569,
+  "value": 729779,
+  "pctOut": 0.05,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-07"
+ },
+ {
+  "holder": "Walleye Trading LLC",
+  "type": "Put",
+  "shares": 55900,
+  "change": 54700,
+  "value": 721110,
+  "pctOut": 0.05,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-03"
+ },
+ {
+  "holder": "CoreCap Advisors, LLC",
+  "type": "Shares",
+  "shares": 52250,
+  "change": 52250,
+  "value": 674025,
+  "pctOut": 0.04,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-06"
+ },
+ {
+  "holder": "MIRAE ASSET GLOBAL ETFS HOLDINGS Ltd.",
+  "type": "Shares",
+  "shares": 52008,
+  "change": -61,
+  "value": 670903,
+  "pctOut": 0.04,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "WEALTH ENHANCEMENT ADVISORY SERVICES, LLC",
+  "type": "Shares",
+  "shares": 51217,
+  "change": 17063,
+  "value": 540852,
+  "pctOut": 0.04,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-15"
+ },
+ {
+  "holder": "Creative Planning",
+  "type": "Shares",
+  "shares": 49279,
+  "change": 21413,
+  "value": 635695,
+  "pctOut": 0.04,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "Walleye Trading LLC",
+  "type": "Shares",
+  "shares": 44533,
+  "change": 39053,
+  "value": 574476,
+  "pctOut": 0.04,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-03"
+ },
+ {
+  "holder": "AXQ CAPITAL, LP",
+  "type": "Shares",
+  "shares": 43339,
+  "change": 19392,
+  "value": 559073,
+  "pctOut": 0.04,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-06"
+ },
+ {
+  "holder": "Sanctuary Advisors, LLC",
+  "type": "Shares",
+  "shares": 43180,
+  "change": -2883,
+  "value": 557022,
+  "pctOut": 0.04,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "Vanguard Global Advisers, LLC",
+  "type": "Shares",
+  "shares": 42706,
+  "change": 42706,
+  "value": 550907,
+  "pctOut": 0.04,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "Worth Venture Partners, LLC",
+  "type": "Shares",
+  "shares": 42682,
+  "change": 21259,
+  "value": 550598,
+  "pctOut": 0.04,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-10"
+ },
+ {
+  "holder": "State of Wyoming",
+  "type": "Shares",
+  "shares": 42172,
+  "change": 24936,
+  "value": 544019,
+  "pctOut": 0.03,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-06"
+ },
+ {
+  "holder": "Russell Investments Group, Ltd.",
+  "type": "Shares",
+  "shares": 41945,
+  "change": 31638,
+  "value": 541090,
+  "pctOut": 0.03,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-06"
+ },
+ {
+  "holder": "ROYAL BANK OF CANADA",
+  "type": "Shares",
+  "shares": 41270,
+  "change": -312,
+  "value": 532000,
+  "pctOut": 0.03,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "HEALTHCARE OF ONTARIO PENSION PLAN TRUST FUND",
+  "type": "Shares",
+  "shares": 41224,
+  "change": 41224,
+  "value": 531790,
+  "pctOut": 0.03,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "SIMPLEX TRADING, LLC",
+  "type": "Shares",
+  "shares": 40972,
+  "change": -2639,
+  "value": 528538,
+  "pctOut": 0.03,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "NEW YORK STATE COMMON RETIREMENT FUND",
+  "type": "Shares",
+  "shares": 39129,
+  "change": 14200,
+  "value": 504764,
+  "pctOut": 0.03,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-29"
+ },
+ {
+  "holder": "GWN SECURITIES INC.",
+  "type": "Shares",
+  "shares": 38287,
+  "change": 38287,
+  "value": 493902,
+  "pctOut": 0.03,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-05"
+ },
+ {
+  "holder": "CWM, LLC",
+  "type": "Shares",
+  "shares": 37185,
+  "change": 37185,
+  "value": 107093,
+  "pctOut": 0.03,
+  "filed": "Q1 2026",
+  "fileDate": "2026-05-14"
+ },
+ {
+  "holder": "COMMONWEALTH EQUITY SERVICES, LLC",
+  "type": "Shares",
+  "shares": 35577,
+  "change": -1881,
+  "value": 458941,
+  "pctOut": 0.03,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-29"
+ },
+ {
+  "holder": "Mariner, LLC",
+  "type": "Shares",
+  "shares": 35500,
+  "change": -6278,
+  "value": 457950,
+  "pctOut": 0.03,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "Police & Firemen's Retirement System of New Jersey",
+  "type": "Shares",
+  "shares": 33308,
+  "change": 5212,
+  "value": 429673,
+  "pctOut": 0.03,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-23"
+ },
+ {
+  "holder": "STATE BOARD OF ADMINISTRATION OF FLORIDA RETIREMENT SYSTEM",
+  "type": "Shares",
+  "shares": 32057,
+  "change": 0,
+  "value": 413535,
+  "pctOut": 0.03,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-10"
+ },
+ {
+  "holder": "BNP PARIBAS FINANCIAL MARKETS",
+  "type": "Shares",
+  "shares": 30908,
+  "change": 1742,
+  "value": 398713,
+  "pctOut": 0.03,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "GROUP ONE TRADING LLC",
+  "type": "Shares",
+  "shares": 30435,
+  "change": 30435,
+  "value": 392612,
+  "pctOut": 0.03,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Hilltop Holdings Inc.",
+  "type": "Shares",
+  "shares": 30116,
+  "change": 30116,
+  "value": 388496,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "Quantbot Technologies LP",
+  "type": "Shares",
+  "shares": 29868,
+  "change": -79410,
+  "value": 385297,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "MANUFACTURERS LIFE INSURANCE COMPANY, THE",
+  "type": "Shares",
+  "shares": 29604,
+  "change": 729,
+  "value": 381892,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "SEI INVESTMENTS CO",
+  "type": "Shares",
+  "shares": 29083,
+  "change": 2415,
+  "value": 375170,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Jain Global LLC",
+  "type": "Shares",
+  "shares": 28843,
+  "change": 28843,
+  "value": 372075,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Balyasny Asset Management L.P.",
+  "type": "Shares",
+  "shares": 28766,
+  "change": -140722,
+  "value": 371081,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Trexquant Investment LP",
+  "type": "Shares",
+  "shares": 28371,
+  "change": 28371,
+  "value": 365986,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "INTECH INVESTMENT MANAGEMENT LLC",
+  "type": "Shares",
+  "shares": 26986,
+  "change": -7943,
+  "value": 348119,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-10"
+ },
+ {
+  "holder": "OPPENHEIMER & CO INC",
+  "type": "Shares",
+  "shares": 26196,
+  "change": 11501,
+  "value": 337928,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-03"
+ },
+ {
+  "holder": "FOX RUN MANAGEMENT, L.L.C.",
+  "type": "Shares",
+  "shares": 26068,
+  "change": 26068,
+  "value": 336277,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-04"
+ },
+ {
+  "holder": "FORA Capital, LLC",
+  "type": "Shares",
+  "shares": 25594,
+  "change": 25594,
+  "value": 329906,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "STATE OF WISCONSIN INVESTMENT BOARD",
+  "type": "Shares",
+  "shares": 25421,
+  "change": 25421,
+  "value": 327931,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "AMERICAN CENTURY COMPANIES INC",
+  "type": "Shares",
+  "shares": 25331,
+  "change": -56208,
+  "value": 326770,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "BARCLAYS PLC",
+  "type": "Shares",
+  "shares": 24144,
+  "change": -49476,
+  "value": 311458,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "SUSQUEHANNA INTERNATIONAL GROUP, LLP",
+  "type": "Shares",
+  "shares": 22777,
+  "change": -151595,
+  "value": 293823,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Walleye Capital LLC",
+  "type": "Put",
+  "shares": 22700,
+  "change": -11000,
+  "value": 292830,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-03"
+ },
+ {
+  "holder": "MIRABELLA FINANCIAL SERVICES LLP",
+  "type": "Shares",
+  "shares": 22580,
+  "change": 22580,
+  "value": 291282,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-31"
+ },
+ {
+  "holder": "Centiva Capital, LP",
+  "type": "Shares",
+  "shares": 22050,
+  "change": 11219,
+  "value": 284445,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "Abel Hall, LLC",
+  "type": "Shares",
+  "shares": 22001,
+  "change": -565,
+  "value": 283813,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-24"
+ },
+ {
+  "holder": "VOYA INVESTMENT MANAGEMENT LLC",
+  "type": "Shares",
+  "shares": 21713,
+  "change": 3426,
+  "value": 280098,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "SG Americas Securities, LLC",
+  "type": "Shares",
+  "shares": 21700,
+  "change": -62713,
+  "value": 280,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-07"
+ },
+ {
+  "holder": "MERCER GLOBAL ADVISORS INC /ADV",
+  "type": "Shares",
+  "shares": 20162,
+  "change": 9383,
+  "value": 260095,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-19"
+ },
+ {
+  "holder": "GREENLEAF TRUST",
+  "type": "Shares",
+  "shares": 20107,
+  "change": 565,
+  "value": 259380,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-21"
+ },
+ {
+  "holder": "MAI Capital Management",
+  "type": "Shares",
+  "shares": 19834,
+  "change": 2921,
+  "value": 255859,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Cerity Partners LLC",
+  "type": "Shares",
+  "shares": 19750,
+  "change": 7761,
+  "value": 254775,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "SCOTIA CAPITAL INC.",
+  "type": "Shares",
+  "shares": 19653,
+  "change": 19653,
+  "value": 253526,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-11"
+ },
+ {
+  "holder": "Scientech Research LLC",
+  "type": "Shares",
+  "shares": 19383,
+  "change": 19383,
+  "value": 250041,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Legacy Financial Advisors, Inc.",
+  "type": "Shares",
+  "shares": 19073,
+  "change": 73,
+  "value": 246042,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-05"
+ },
+ {
+  "holder": "Summit Trail Advisors, LLC",
+  "type": "Shares",
+  "shares": 19024,
+  "change": 19024,
+  "value": 245410,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-11"
+ },
+ {
+  "holder": "Aigen Investment Management, LP",
+  "type": "Shares",
+  "shares": 18691,
+  "change": 18691,
+  "value": 241114,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Quantinno Capital Management LP",
+  "type": "Shares",
+  "shares": 18558,
+  "change": -4840,
+  "value": 239398,
+  "pctOut": 0.02,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "Legal & General Group Plc",
+  "type": "Shares",
+  "shares": 18031,
+  "change": 8023,
+  "value": 232600,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Cetera Investment Advisers",
+  "type": "Shares",
+  "shares": 17817,
+  "change": -6015,
+  "value": 229839,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "BANK OF NOVA SCOTIA",
+  "type": "Shares",
+  "shares": 16890,
+  "change": 16890,
+  "value": 217881,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "ENVESTNET ASSET MANAGEMENT INC",
+  "type": "Shares",
+  "shares": 16694,
+  "change": 1162,
+  "value": 215353,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-03"
+ },
+ {
+  "holder": "PNC Financial Services Group, Inc.",
+  "type": "Shares",
+  "shares": 16338,
+  "change": -19,
+  "value": 210760,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-07"
+ },
+ {
+  "holder": "PRELUDE CAPITAL MANAGEMENT, LLC",
+  "type": "Shares",
+  "shares": 15970,
+  "change": 15970,
+  "value": 206013,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Olympiad Research LP",
+  "type": "Shares",
+  "shares": 15919,
+  "change": 15919,
+  "value": 205355,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-24"
+ },
+ {
+  "holder": "ProShare Advisors LLC",
+  "type": "Shares",
+  "shares": 14790,
+  "change": -927,
+  "value": 190791,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-11"
+ },
+ {
+  "holder": "CAPTRUST FINANCIAL ADVISORS",
+  "type": "Shares",
+  "shares": 14402,
+  "change": 4129,
+  "value": 185786,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "OSAIC HOLDINGS, INC.",
+  "type": "Shares",
+  "shares": 14063,
+  "change": 481,
+  "value": 181410,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Pallas Capital Advisors LLC",
+  "type": "Shares",
+  "shares": 13997,
+  "change": -886,
+  "value": 180561,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-07"
+ },
+ {
+  "holder": "Hudson Bay Capital Management LP",
+  "type": "Shares",
+  "shares": 13610,
+  "change": 13610,
+  "value": 175569,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Vanguard Personalized Indexing Management, LLC",
+  "type": "Shares",
+  "shares": 13301,
+  "change": 13301,
+  "value": 171583,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-11"
+ },
+ {
+  "holder": "VICTORY CAPITAL MANAGEMENT INC",
+  "type": "Shares",
+  "shares": 12347,
+  "change": 212,
+  "value": 159276,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-07"
+ },
+ {
+  "holder": "GSA CAPITAL PARTNERS LLP",
+  "type": "Shares",
+  "shares": 11858,
+  "change": -92152,
+  "value": 153,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-06"
+ },
+ {
+  "holder": "Belpointe Asset Management LLC",
+  "type": "Shares",
+  "shares": 11703,
+  "change": 0,
+  "value": 150969,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-31"
+ },
+ {
+  "holder": "Interchange Capital Partners, LLC",
+  "type": "Shares",
+  "shares": 11001,
+  "change": 11001,
+  "value": 141913,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-20"
+ },
+ {
+  "holder": "Merit Financial Group, LLC",
+  "type": "Shares",
+  "shares": 10861,
+  "change": 10861,
+  "value": 140108,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-20"
+ },
+ {
+  "holder": "XPONANCE LLC",
+  "type": "Shares",
+  "shares": 10765,
+  "change": 10765,
+  "value": 138869,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-10"
+ },
+ {
+  "holder": "WEDBUSH SECURITIES INC",
+  "type": "Shares",
+  "shares": 10400,
+  "change": 0,
+  "value": 134,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-28"
+ },
+ {
+  "holder": "nVerses Capital, LLC",
+  "type": "Shares",
+  "shares": 10366,
+  "change": 10366,
+  "value": 133721,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-04"
+ },
+ {
+  "holder": "Ameritas Investment Partners, Inc.",
+  "type": "Shares",
+  "shares": 10249,
+  "change": 839,
+  "value": 132212,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "Edgestream Partners, L.P.",
+  "type": "Shares",
+  "shares": 10209,
+  "change": 10209,
+  "value": 131696,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-11"
+ },
+ {
+  "holder": "Lido Advisors, LLC",
+  "type": "Shares",
+  "shares": 10074,
+  "change": -25056,
+  "value": 129955,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-07"
+ },
+ {
+  "holder": "Smartleaf Asset Management LLC",
+  "type": "Shares",
+  "shares": 10002,
+  "change": 0,
+  "value": 129126,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "NISA INVESTMENT ADVISORS, LLC",
+  "type": "Shares",
+  "shares": 8525,
+  "change": -3600,
+  "value": 109973,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-10"
+ },
+ {
+  "holder": "SBI Securities Co., Ltd.",
+  "type": "Shares",
+  "shares": 8257,
+  "change": -408,
+  "value": 106515,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-23"
+ },
+ {
+  "holder": "Arax Advisory Partners",
+  "type": "Shares",
+  "shares": 7816,
+  "change": 7740,
+  "value": 100827,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-10"
+ },
+ {
+  "holder": "Kingdom Financial Group LLC.",
+  "type": "Shares",
+  "shares": 6977,
+  "change": -5039,
+  "value": 90003,
+  "pctOut": 0.01,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-07"
+ },
+ {
+  "holder": "Allworth Financial LP",
+  "type": "Shares",
+  "shares": 5698,
+  "change": 1696,
+  "value": 73505,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-11"
+ },
+ {
+  "holder": "State of Alaska, Department of Revenue",
+  "type": "Shares",
+  "shares": 4935,
+  "change": -55615,
+  "value": 63,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-20"
+ },
+ {
+  "holder": "Integrated Wealth Concepts LLC",
+  "type": "Shares",
+  "shares": 4332,
+  "change": 4332,
+  "value": 55885,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "Tower Research Capital LLC (TRC)",
+  "type": "Shares",
+  "shares": 4196,
+  "change": -21526,
+  "value": 54128,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-11"
+ },
+ {
+  "holder": "Walleye Trading LLC",
+  "type": "Call",
+  "shares": 4100,
+  "change": -1700,
+  "value": 52890,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-03"
+ },
+ {
+  "holder": "Cherry Tree Wealth Management, LLC",
+  "type": "Shares",
+  "shares": 4000,
+  "change": 4000,
+  "value": 11520,
+  "pctOut": 0.0,
+  "filed": "Q1 2026",
+  "fileDate": "2026-05-05"
+ },
+ {
+  "holder": "Point72 Asset Management, L.P.",
+  "type": "Put",
+  "shares": 3900,
+  "change": 3900,
+  "value": 50310,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "UBS AM, a distinct business unit of UBS ASSET MANAGEMENT AMERICAS LLC",
+  "type": "Shares",
+  "shares": 3573,
+  "change": 0,
+  "value": 46092,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "Walleye Capital LLC",
+  "type": "Shares",
+  "shares": 3294,
+  "change": -6368,
+  "value": 42493,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-03"
+ },
+ {
+  "holder": "Federation des caisses Desjardins du Quebec",
+  "type": "Shares",
+  "shares": 2860,
+  "change": 1860,
+  "value": 36887,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Pinnacle Wealth Planning Services, Inc.",
+  "type": "Shares",
+  "shares": 2847,
+  "change": 2847,
+  "value": 36726,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-07"
+ },
+ {
+  "holder": "Sterling Capital Management LLC",
+  "type": "Shares",
+  "shares": 2050,
+  "change": 328,
+  "value": 26445,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-28"
+ },
+ {
+  "holder": "JONES FINANCIAL COMPANIES LLLP",
+  "type": "Shares",
+  "shares": 2023,
+  "change": 300,
+  "value": 22395,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Sunbelt Securities, Inc.",
+  "type": "Shares",
+  "shares": 1823,
+  "change": 1823,
+  "value": 5250,
+  "pctOut": 0.0,
+  "filed": "Q1 2026",
+  "fileDate": "2026-05-18"
+ },
+ {
+  "holder": "CALIFORNIA STATE TEACHERS RETIREMENT SYSTEM",
+  "type": "Shares",
+  "shares": 1519,
+  "change": -4349,
+  "value": 19595,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-24"
+ },
+ {
+  "holder": "EverSource Wealth Advisors, LLC",
+  "type": "Shares",
+  "shares": 1437,
+  "change": -100,
+  "value": 18537,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-24"
+ },
+ {
+  "holder": "Aster Capital Management (DIFC) Ltd",
+  "type": "Shares",
+  "shares": 1239,
+  "change": 1239,
+  "value": 15983,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "STRS OHIO",
+  "type": "Shares",
+  "shares": 1000,
+  "change": 0,
+  "value": 12900,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-30"
+ },
+ {
+  "holder": "Activest Wealth Management",
+  "type": "Shares",
+  "shares": 1000,
+  "change": 0,
+  "value": 12900,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-16"
+ },
+ {
+  "holder": "Caitong International Asset Management Co., Ltd",
+  "type": "Shares",
+  "shares": 984,
+  "change": 904,
+  "value": 12694,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-05"
+ },
+ {
+  "holder": "Essential Partners LLC",
+  "type": "Shares",
+  "shares": 951,
+  "change": -8080,
+  "value": 12268,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-10"
+ },
+ {
+  "holder": "Napier Financial, LLC",
+  "type": "Shares",
+  "shares": 945,
+  "change": 0,
+  "value": 12191,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-31"
+ },
+ {
+  "holder": "FIFTH THIRD BANCORP",
+  "type": "Shares",
+  "shares": 911,
+  "change": 0,
+  "value": 11752,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-05"
+ },
+ {
+  "holder": "Owl Creek Wealth Partners LLC",
+  "type": "Shares",
+  "shares": 863,
+  "change": 0,
+  "value": 11133,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-20"
+ },
+ {
+  "holder": "NewEdge Advisors, LLC",
+  "type": "Shares",
+  "shares": 825,
+  "change": 0,
+  "value": 10643,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "Rockefeller Capital Management L.P.",
+  "type": "Shares",
+  "shares": 820,
+  "change": -914,
+  "value": 10578,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "Cetera Investment Advisers",
+  "type": "Call",
+  "shares": 800,
+  "change": 800,
+  "value": 960,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "SJS Investment Consulting Inc.",
+  "type": "Shares",
+  "shares": 785,
+  "change": 783,
+  "value": 10127,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-22"
+ },
+ {
+  "holder": "NORTHWESTERN MUTUAL WEALTH MANAGEMENT CO",
+  "type": "Shares",
+  "shares": 756,
+  "change": -1957,
+  "value": 9753,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "Steward Partners Investment Advisory, LLC",
+  "type": "Shares",
+  "shares": 638,
+  "change": 118,
+  "value": 8230,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "Strategic Wealth Partners, Ltd.",
+  "type": "Shares",
+  "shares": 610,
+  "change": -1365,
+  "value": 7869,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "HOLLENCREST CAPITAL MANAGEMENT",
+  "type": "Shares",
+  "shares": 600,
+  "change": -600,
+  "value": 7740,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-13"
+ },
+ {
+  "holder": "Optiver Holding B.V.",
+  "type": "Shares",
+  "shares": 458,
+  "change": -7153,
+  "value": 5908,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "Farther Finance Advisors, LLC",
+  "type": "Shares",
+  "shares": 452,
+  "change": 380,
+  "value": 5832,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-17"
+ },
+ {
+  "holder": "Cape Investment Advisory, Inc.",
+  "type": "Shares",
+  "shares": 400,
+  "change": 400,
+  "value": 5160,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-23"
+ },
+ {
+  "holder": "Medallion Wealth Advisors, LLC",
+  "type": "Shares",
+  "shares": 383,
+  "change": 0,
+  "value": 4941,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "PIN OAK INVESTMENT ADVISORS INC",
+  "type": "Shares",
+  "shares": 313,
+  "change": 0,
+  "value": 4,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-18"
+ },
+ {
+  "holder": "Golden State Wealth Management, LLC",
+  "type": "Shares",
+  "shares": 300,
+  "change": 300,
+  "value": 3870,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-22"
+ },
+ {
+  "holder": "Global Retirement Partners, LLC",
+  "type": "Shares",
+  "shares": 227,
+  "change": 227,
+  "value": 2928,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-06"
+ },
+ {
+  "holder": "Stone House Investment Management, LLC",
+  "type": "Shares",
+  "shares": 184,
+  "change": 184,
+  "value": 2374,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-05"
+ },
+ {
+  "holder": "Parkside Financial Bank & Trust",
+  "type": "Shares",
+  "shares": 175,
+  "change": 175,
+  "value": 504,
+  "pctOut": 0.0,
+  "filed": "Q1 2026",
+  "fileDate": "2026-05-13"
+ },
+ {
+  "holder": "Marquette Asset Management, LLC",
+  "type": "Shares",
+  "shares": 168,
+  "change": 168,
+  "value": 2168,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-09"
+ },
+ {
+  "holder": "GAMMA Investing LLC",
+  "type": "Shares",
+  "shares": 163,
+  "change": -397,
+  "value": 2103,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-07"
+ },
+ {
+  "holder": "ROTHSCHILD INVESTMENT LLC",
+  "type": "Shares",
+  "shares": 151,
+  "change": 149,
+  "value": 1948,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-06"
+ },
+ {
+  "holder": "HighMark Wealth Management LLC",
+  "type": "Shares",
+  "shares": 150,
+  "change": 0,
+  "value": 1935,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "MassMutual Private Wealth & Trust, FSB",
+  "type": "Shares",
+  "shares": 114,
+  "change": 114,
+  "value": 1471,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-02"
+ },
+ {
+  "holder": "WHITTIER TRUST CO",
+  "type": "Shares",
+  "shares": 110,
+  "change": 0,
+  "value": 1230,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-28"
+ },
+ {
+  "holder": "US BANCORP \\DE\\",
+  "type": "Shares",
+  "shares": 99,
+  "change": -750,
+  "value": 1277,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "C M BIDWELL & ASSOCIATES LTD",
+  "type": "Shares",
+  "shares": 87,
+  "change": 87,
+  "value": 1122,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-11"
+ },
+ {
+  "holder": "Covestor Ltd",
+  "type": "Shares",
+  "shares": 81,
+  "change": 57,
+  "value": 1,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-07"
+ },
+ {
+  "holder": "True Wealth Design, LLC",
+  "type": "Shares",
+  "shares": 63,
+  "change": -96,
+  "value": 813,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-16"
+ },
+ {
+  "holder": "HARBOUR INVESTMENTS, INC.",
+  "type": "Shares",
+  "shares": 57,
+  "change": -52,
+  "value": 730,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-12"
+ },
+ {
+  "holder": "Harborfront Financial Group LLC",
+  "type": "Shares",
+  "shares": 55,
+  "change": 55,
+  "value": 710,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-07"
+ },
+ {
+  "holder": "Transamerica Financial Advisors, LLC",
+  "type": "Shares",
+  "shares": 47,
+  "change": 0,
+  "value": 606,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-17"
+ },
+ {
+  "holder": "Larson Financial Group LLC",
+  "type": "Shares",
+  "shares": 46,
+  "change": -91,
+  "value": 593,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "Rialto Wealth Management, LLC",
+  "type": "Shares",
+  "shares": 39,
+  "change": 39,
+  "value": 504,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-11"
+ },
+ {
+  "holder": "IMA Advisory Services, Inc.",
+  "type": "Shares",
+  "shares": 26,
+  "change": 26,
+  "value": 335,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-10"
+ },
+ {
+  "holder": "Clearstead Advisors, LLC",
+  "type": "Shares",
+  "shares": 22,
+  "change": 22,
+  "value": 284,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-06"
+ },
+ {
+  "holder": "JPL Wealth Management, LLC",
+  "type": "Shares",
+  "shares": 17,
+  "change": 17,
+  "value": 220,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-08-14"
+ },
+ {
+  "holder": "IFP Advisors, Inc",
+  "type": "Shares",
+  "shares": 10,
+  "change": -585,
+  "value": 129,
+  "pctOut": 0.0,
+  "filed": "Q2 2026",
+  "fileDate": "2026-07-20"
+ }
+]
