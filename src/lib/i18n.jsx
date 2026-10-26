@@ -507,6 +507,13 @@ const STRINGS = {
     en: 'Loading your dashboard…',
     th: 'กำลังโหลดแดชบอร์ดของคุณ…',
   },
+  'chart.today': { en: 'Today', th: 'วันนี้' },
+  'chart.todayNote': {
+    en: 'Today’s 1-minute bars — pre-market, regular hours and after-hours (US/Eastern times) — via Yahoo Finance; may lag the live market by a few minutes.',
+    th: 'แท่งราคาวันนี้แบบ 1 นาที — รวมก่อนเปิดตลาด เวลาปกติ และหลังปิดตลาด (เวลา US/Eastern) — จาก Yahoo Finance อาจล่าช้าจากตลาดจริงไม่กี่นาที',
+  },
+  'chart.todayLoading': { en: 'Loading today’s session…', th: 'กำลังโหลดข้อมูลวันนี้…' },
+  'chart.todayError': { en: 'Could not load today’s session.', th: 'โหลดข้อมูลวันนี้ไม่สำเร็จ' },
   'live.title': { en: 'Live price', th: 'ราคาเรียลไทม์' },
   'live.note': {
     en: 'Real-time quote via TradingView (Cboe exchanges). Separate from TickPin’s daily data in the tabs below.',

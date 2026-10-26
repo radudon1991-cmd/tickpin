@@ -355,3 +355,4 @@ button.pro-chip {
 .dash-tv-wrap { margin-top: 10px; }
 .dash-card-daily { color: var(--muted); font-size: 12px; margin-top: 8px; }
 .tradingview-widget-container iframe { display: block; }
+.pro-chip:disabled { opacity: 0.45; cursor: default; }

@@ -17,3 +17,19 @@ export async function fetchPrices(ticker) {
   pricesCache.set(key, data)
   return data
 }
+
+// Today's intraday session (1-minute bars incl. pre/post market) via
+// the same relay. Short 30-second client cache: the Chart tab's Today
+// view refreshes about once a minute while it is open.
+const intraCache = new Map()
+
+export async function fetchIntraday(ticker) {
+  const key = (ticker || '').toString().toUpperCase()
+  const hit = intraCache.get(key)
+  if (hit && Date.now() - hit.at < 30_000) return hit.data
+  const res = await fetch(`${PRICES_URL(key)}&intraday=1`)
+  if (!res.ok) throw new Error(`Intraday fetch failed for ${key}: ${res.status}`)
+  const data = await res.json()
+  intraCache.set(key, { at: Date.now(), data })
+  return data
+}

@@ -30,9 +30,9 @@ function toCandles(data) {
   return candles
 }
 
-async function fetchCandles(ticker, interval) {
+async function fetchCandles(ticker, interval, range = '5y', extra = '') {
   const upstream = await fetch(
-    `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?range=5y&interval=${interval}`,
+    `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?range=${range}&interval=${interval}${extra}`,
     {
       headers: {
         'User-Agent': 'TickPin research contact: radudon1991@gmail.com',
@@ -62,6 +62,14 @@ export default async function handler(req, res) {
   }
   const ticker = tickerRaw.toUpperCase()
   try {
+    if ((req.query?.intraday || '').toString() === '1') {
+      // Today's session at 1-minute resolution, including pre-market
+      // (from 04:00 ET) and after-hours (to 20:00 ET) bars.
+      const intraday = await fetchCandles(ticker, '1m', '1d', '&includePrePost=true')
+      res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300')
+      res.status(200).json({ intraday })
+      return
+    }
     const daily = await fetchCandles(ticker, '1d')
     const weekly = await fetchCandles(ticker, '1wk')
     // Prices change at most daily; let the Vercel edge cache carry

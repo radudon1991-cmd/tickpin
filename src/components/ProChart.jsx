@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { sma, ema, bollinger, rsi, macd, aggregate } from '../lib/indicators'
+import { fetchIntraday } from '../lib/prices'
 import { useLang } from '../lib/i18n'
 
 // TradingView-feel interactive chart: pan / zoom / pinch, range
@@ -80,6 +81,36 @@ function formatDateFull(t) {
   const d = new Date(t * 1000)
   if (Number.isNaN(d.getTime())) return ''
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
+// Intraday (Today view) labels are clock times on the market's own
+// clock (US/Eastern), whatever timezone the visitor is in.
+const TIME_FMT_ET = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/New_York',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false,
+})
+const DATETIME_FMT_ET = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/New_York',
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false,
+})
+
+function formatTimeET(t) {
+  const d = new Date(t * 1000)
+  if (Number.isNaN(d.getTime())) return ''
+  return TIME_FMT_ET.format(d)
+}
+
+function formatDateTimeET(t) {
+  const d = new Date(t * 1000)
+  if (Number.isNaN(d.getTime())) return ''
+  return `${DATETIME_FMT_ET.format(d)} ET`
 }
 
 // View = { first, count }: fractional index of the first visible bar
@@ -605,7 +636,7 @@ function drawProChart(canvas, cssWidth, cssHeight, heights, model) {
       const tVal = num(series[hover.idx].t)
       if (tVal !== null) {
         const spanDays = (series[i1].t - series[i0].t) / 86400
-        const label = formatDateShort(tVal, spanDays > 400)
+        const label = spanDays < 2 ? formatTimeET(tVal) : formatDateShort(tVal, spanDays > 400)
         ctx.font = `10.5px ${FONT}`
         const tw = ctx.measureText(label).width + 12
         const cx = Math.min(plotRight - tw / 2, Math.max(plotLeft + tw / 2, hx))
@@ -630,7 +661,7 @@ function drawProChart(canvas, cssWidth, cssHeight, heights, model) {
     const idx = Math.min(n - 1, Math.max(0, Math.round(fi)))
     const tVal = num(series[idx].t)
     if (tVal === null) continue
-    const label = formatDateShort(tVal, spanDays > 400)
+    const label = spanDays < 2 ? formatTimeET(tVal) : formatDateShort(tVal, spanDays > 400)
     const x = xCenter(idx)
     const tw = ctx.measureText(label).width
     const cx = Math.min(plotRight - tw / 2, Math.max(plotLeft + tw / 2, x))
@@ -640,7 +671,7 @@ function drawProChart(canvas, cssWidth, cssHeight, heights, model) {
   return layout
 }
 
-export default function ProChart({ candles }) {
+export default function ProChart({ candles, ticker }) {
   const { t } = useLang()
   const wrapRef = useRef(null)
   const canvasRef = useRef(null)
@@ -673,12 +704,40 @@ export default function ProChart({ candles }) {
     setHoverState(h)
   }
 
-  const series = useMemo(() => {
+  const dailySeries = useMemo(() => {
     if (!Array.isArray(candles)) return []
     if (interval === 'W') return aggregate(candles, 'week')
     if (interval === 'M') return aggregate(candles, 'month')
     return candles
   }, [candles, interval])
+
+  // Today mode: today's 1-minute session (pre-market 04:00 ET through
+  // after-hours 20:00 ET) fetched from the prices relay, refreshed
+  // about once a minute while the mode is open.
+  const [mode, setMode] = useState('range')
+  const [intra, setIntra] = useState({ status: 'idle', candles: [] })
+
+  useEffect(() => {
+    if (mode !== 'today' || !ticker) return undefined
+    let alive = true
+    setIntra((prev) => ({ status: 'loading', candles: prev.candles }))
+    const load = () =>
+      fetchIntraday(ticker)
+        .then((data) => {
+          if (alive) setIntra({ status: 'ok', candles: data.intraday || [] })
+        })
+        .catch(() => {
+          if (alive) setIntra((prev) => ({ status: 'error', candles: prev.candles }))
+        })
+    load()
+    const id = setInterval(load, 60_000)
+    return () => {
+      alive = false
+      clearInterval(id)
+    }
+  }, [mode, ticker])
+
+  const series = mode === 'today' ? intra.candles : dailySeries
 
   const inds = useMemo(
     () => ({
@@ -705,20 +764,33 @@ export default function ProChart({ candles }) {
   // (Before, Reset re-applied the CURRENT range, so after picking "All"
   // there was no one-tap way back to the plain daily view.)
   const resetView = () => {
+    setMode('range')
     setIntervalSel('D')
     applyRange('1Y', Array.isArray(candles) ? candles : [])
   }
 
   // Reset the window whenever the series changes (new ticker or new
-  // interval), using the currently selected range preset.
+  // interval), using the currently selected range preset. Exception:
+  // in Today mode a periodic refresh of the SAME session (same first
+  // bar) keeps the user's current window instead of snapping back.
   const lastSeriesRef = useRef(null)
   useEffect(() => {
     if (series !== lastSeriesRef.current) {
+      const prev = lastSeriesRef.current
       lastSeriesRef.current = series
+      if (
+        mode === 'today' &&
+        prev &&
+        prev.length > 0 &&
+        series.length > 0 &&
+        prev[0].t === series[0].t
+      ) {
+        return
+      }
       setView(rangeView(rangeRef.current, series))
       setHover(null)
     }
-  }, [series])
+  }, [series, mode])
 
   // Measure the stage width (DPR + ResizeObserver, like SmcChart).
   useEffect(() => {
@@ -908,11 +980,17 @@ export default function ProChart({ candles }) {
     <div className="pro-chart">
       <div className="pro-toolbar">
         <div className="pro-group">
+          <button className={chip(mode === 'today')} onClick={() => setMode('today')}>
+            {t('chart.today')}
+          </button>
           {RANGES.map((r) => (
             <button
               key={r.id}
-              className={chip(activeRange === r.id)}
-              onClick={() => applyRange(r.id, series)}
+              className={chip(mode === 'range' && activeRange === r.id)}
+              onClick={() => {
+                setMode('range')
+                applyRange(r.id, dailySeries)
+              }}
             >
               {t(r.key)}
             </button>
@@ -924,6 +1002,7 @@ export default function ProChart({ candles }) {
               key={iv.id}
               className={chip(interval === iv.id)}
               onClick={() => setIntervalSel(iv.id)}
+              disabled={mode === 'today'}
             >
               {t(iv.key)}
             </button>
@@ -977,11 +1056,18 @@ export default function ProChart({ candles }) {
         </div>
       </div>
 
+      {mode === 'today' && intra.status === 'loading' && intra.candles.length === 0 && (
+        <p>{t('chart.todayLoading')}</p>
+      )}
+      {mode === 'today' && intra.status === 'error' && intra.candles.length === 0 && (
+        <p className="error">{t('chart.todayError')}</p>
+      )}
+
       <div className="pro-stage" ref={wrapRef} style={{ height: `${heights.total}px` }}>
         <canvas ref={canvasRef} className="pro-canvas" />
         {legendBar && (
           <div className="pro-legend">
-            <span className="pro-legend-date">{formatDateFull(legendBar.t)}</span>
+            <span className="pro-legend-date">{mode === 'today' ? formatDateTimeET(legendBar.t) : formatDateFull(legendBar.t)}</span>
             <span>
               {t('chart.open')} <b style={{ color: legendColor }}>{formatPrice(legendBar.o)}</b>
             </span>
@@ -1030,7 +1116,7 @@ export default function ProChart({ candles }) {
           </div>
         )}
       </div>
-      <p className="source-note pro-caption">{t('info.barNoteNoDate')}</p>
+      <p className="source-note pro-caption">{mode === 'today' ? t('chart.todayNote') : t('info.barNoteNoDate')}</p>
     </div>
   )
 }

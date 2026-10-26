@@ -757,7 +757,7 @@ function AppInner() {
                   {t('smc.error', { ticker: company.ticker })}
                 </p>
               )}
-              {pricesState === 'ok' && prices && <ProChart candles={prices.daily} />}
+              {pricesState === 'ok' && prices && <ProChart candles={prices.daily} ticker={company.ticker} />}
             </section>
           )}
 
