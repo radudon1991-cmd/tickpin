@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { fetchCompanyInfo } from '../lib/company'
 import { fmtUSD, fmtNum } from '../lib/edgar'
+import { useLang } from '../lib/i18n'
 
 // Per-stock Info tab: a quote strip from the app's daily prices, the
 // company's own EDGAR submissions facts (industry, HQ, fiscal year
@@ -8,7 +9,6 @@ import { fmtUSD, fmtNum } from '../lib/edgar'
 // filings. EDGAR fields a filer does not report render as "—" —
 // foreign issuers like ZENA leave several empty by design.
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const ANNUAL_FORMS = ['10-K', '20-F', '40-F']
 
 function fmtPrice(v) {
@@ -16,14 +16,14 @@ function fmtPrice(v) {
   return `$${v.toFixed(2)}`
 }
 
-function fmtFiscalYearEnd(v) {
+function fmtFiscalYearEnd(v, months) {
   if (!v) return '—'
   const s = v.toString()
   if (!/^\d{4}$/.test(s)) return s
   const m = parseInt(s.slice(0, 2), 10)
   const d = parseInt(s.slice(2, 4), 10)
   if (m < 1 || m > 12) return s
-  return `${MONTHS[m - 1]} ${d}`
+  return `${months[m - 1]} ${d}`
 }
 
 function cikNumber(cik) {
@@ -59,6 +59,8 @@ function InfoCard({ label, value, meta, valueClassName }) {
 }
 
 export default function InfoTab({ company, prices, sharesOutstanding }) {
+  const { t } = useLang()
+  const months = t('info.monthsShort').split('|')
   const [info, setInfo] = useState(null)
   const [infoState, setInfoState] = useState('loading') // loading|ok|error
 
@@ -105,20 +107,21 @@ export default function InfoTab({ company, prices, sharesOutstanding }) {
     info?.latestAnnual ||
     info?.recentFilings?.find((f) => ANNUAL_FORMS.includes((f.form || '').trim().toUpperCase()))
   const links = []
-  if (info?.website) links.push({ label: 'Company website', href: externalUrl(info.website) })
+  if (info?.website)
+    links.push({ label: t('info.companyWebsite'), href: externalUrl(info.website) })
   links.push({
-    label: 'SEC filings',
+    label: t('info.secFilings'),
     href: `https://www.sec.gov/edgar/browse/?CIK=${cikNum}&owner=exclude`,
   })
   if (annual) {
     links.push({
-      label: `Latest annual report (${annual.form})`,
+      label: t('info.latestAnnual', { form: annual.form }),
       href: archivesIndexUrl(cikNum, annual.accessionNumber),
     })
   }
-  links.push({ label: 'Yahoo Finance', href: `https://finance.yahoo.com/quote/${ticker}` })
+  links.push({ label: t('info.yahooFinance'), href: `https://finance.yahoo.com/quote/${ticker}` })
   links.push({
-    label: 'Google Finance',
+    label: t('info.googleFinance'),
     href: googleFinanceUrl(ticker, info?.exchanges?.[0]),
   })
 
@@ -128,17 +131,18 @@ export default function InfoTab({ company, prices, sharesOutstanding }) {
   const hq =
     biz && (biz.city || hqRegion) ? [biz.city, hqRegion].filter(Boolean).join(', ') : null
   const hqMeta = biz
-    ? [biz.street1, biz.street2, biz.zip].filter(Boolean).join(' · ') || 'business address on file'
-    : 'not reported'
+    ? [biz.street1, biz.street2, biz.zip].filter(Boolean).join(' · ') ||
+      t('info.businessAddressOnFile')
+    : t('info.notReported')
 
   return (
     <>
       {last ? (
         <>
           <div className="fact-grid">
-            <InfoCard label="Last close" value={fmtPrice(last.c)} meta={barDate || ''} />
+            <InfoCard label={t('info.lastClose')} value={fmtPrice(last.c)} meta={barDate || ''} />
             <InfoCard
-              label="Day change"
+              label={t('info.dayChange')}
               value={
                 change != null
                   ? `${change >= 0 ? '+' : '−'}$${Math.abs(change).toFixed(2)}${
@@ -146,31 +150,35 @@ export default function InfoTab({ company, prices, sharesOutstanding }) {
                     }`
                   : '—'
               }
-              meta="vs previous close"
+              meta={t('info.vsPrevClose')}
               valueClassName={change == null ? undefined : change >= 0 ? 'buy' : 'sell'}
             />
             <InfoCard
-              label="Day range"
+              label={t('info.dayRange')}
               value={`${fmtPrice(last.l)} – ${fmtPrice(last.h)}`}
-              meta="last bar low – high"
+              meta={t('info.dayRangeMeta')}
             />
-            <InfoCard label="Volume" value={fmtNum(last.v)} meta="shares, last bar" />
-            <InfoCard label="52-week high" value={fmtPrice(high52)} meta="last 252 bars" />
-            <InfoCard label="52-week low" value={fmtPrice(low52)} meta="last 252 bars" />
+            <InfoCard label={t('info.volume')} value={fmtNum(last.v)} meta={t('info.volumeMeta')} />
+            <InfoCard
+              label={t('info.high52')}
+              value={fmtPrice(high52)}
+              meta={t('info.weekMeta')}
+            />
+            <InfoCard label={t('info.low52')} value={fmtPrice(low52)} meta={t('info.weekMeta')} />
             {marketCap != null && (
               <InfoCard
-                label="Market cap"
+                label={t('info.marketCap')}
                 value={fmtUSD(marketCap)}
-                meta="last close × shares outstanding"
+                meta={t('info.marketCapMeta')}
               />
             )}
           </div>
           <p className="source-note">
-            Latest daily bar{barDate ? ` (${barDate})` : ''} — not a streaming quote.
+            {barDate ? t('info.barNote', { date: barDate }) : t('info.barNoteNoDate')}
           </p>
         </>
       ) : (
-        <p>Price history is not available for {ticker} just now, so no quote strip can be shown.</p>
+        <p>{t('info.noPrices', { ticker })}</p>
       )}
 
       <div className="info-links">
@@ -181,59 +189,58 @@ export default function InfoTab({ company, prices, sharesOutstanding }) {
         ))}
       </div>
 
-      {infoState === 'loading' && <p>Loading company information from SEC EDGAR…</p>}
-      {infoState === 'error' && (
-        <p className="error">
-          Company details from EDGAR could not be loaded just now. The quote and the links above
-          do not depend on that feed.
-        </p>
-      )}
+      {infoState === 'loading' && <p>{t('info.loading')}</p>}
+      {infoState === 'error' && <p className="error">{t('info.error')}</p>}
       {infoState === 'ok' && info && (
         <>
-          <h3>Company facts</h3>
+          <h3>{t('info.factsTitle')}</h3>
           <div className="fact-grid">
             <InfoCard
-              label="Industry"
+              label={t('info.industry')}
               value={info.sicDescription || '—'}
-              meta={info.sic ? `SIC ${info.sic}` : 'not reported'}
+              meta={info.sic ? `SIC ${info.sic}` : t('info.notReported')}
             />
             <InfoCard
-              label="Exchange"
+              label={t('info.exchange')}
               value={info.exchanges?.[0] || '—'}
               meta={
                 info.exchanges && info.exchanges.length > 1
                   ? info.exchanges.join(', ')
-                  : 'listing exchange'
+                  : t('info.exchangeMeta')
               }
             />
-            <InfoCard label="Headquarters" value={hq || '—'} meta={hqMeta} />
-            <InfoCard label="Phone" value={info.phone || '—'} meta="as filed with the SEC" />
+            <InfoCard label={t('info.headquarters')} value={hq || '—'} meta={hqMeta} />
             <InfoCard
-              label="Fiscal year end"
-              value={fmtFiscalYearEnd(info.fiscalYearEnd)}
-              meta="month / day"
+              label={t('info.phone')}
+              value={info.phone || '—'}
+              meta={t('info.phoneMeta')}
             />
             <InfoCard
-              label="Incorporated"
+              label={t('info.fiscalYearEnd')}
+              value={fmtFiscalYearEnd(info.fiscalYearEnd, months)}
+              meta={t('info.fiscalYearEndMeta')}
+            />
+            <InfoCard
+              label={t('info.incorporated')}
               value={info.stateOfIncorporationDescription || info.stateOfIncorporation || '—'}
-              meta="state / country of incorporation"
+              meta={t('info.incorporatedMeta')}
             />
             <InfoCard
-              label="Entity category"
+              label={t('info.entityCategory')}
               value={info.category || '—'}
-              meta="SEC filer category"
+              meta={t('info.entityCategoryMeta')}
             />
           </div>
 
           {info.recentFilings && info.recentFilings.length > 0 && (
             <>
-              <h3>Recent filings</h3>
+              <h3>{t('info.recentFilings')}</h3>
               <table className="info-filings">
                 <thead>
                   <tr>
-                    <th>Form</th>
-                    <th>Filed</th>
-                    <th>Report date</th>
+                    <th>{t('info.colForm')}</th>
+                    <th>{t('info.colFiled')}</th>
+                    <th>{t('info.colReportDate')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -257,9 +264,7 @@ export default function InfoTab({ company, prices, sharesOutstanding }) {
                   })}
                 </tbody>
               </table>
-              <p className="source-note">
-                Filed with the SEC via EDGAR — updates within minutes of filing.
-              </p>
+              <p className="source-note">{t('info.filingsNote')}</p>
             </>
           )}
         </>

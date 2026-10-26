@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { fetchNews, timeAgo } from '../lib/news'
+import { useLang } from '../lib/i18n'
 
 // Per-ticker News tab, styled after the Apple Stocks app: a stack of
 // story cards with a thumbnail, publisher + relative time, and the
 // headline. Stories come from our /api/news relay (Yahoo Finance).
 
 export default function NewsTab({ ticker }) {
+  const { t } = useLang()
   const [stories, setStories] = useState(null)
   const [state, setState] = useState('loading') // loading|ok|error
 
@@ -29,19 +31,15 @@ export default function NewsTab({ ticker }) {
     }
   }, [ticker])
 
-  if (state === 'loading') return <p>Loading news for {ticker}…</p>
+  if (state === 'loading') return <p>{t('news.loading', { ticker })}</p>
   if (state === 'error') {
-    return (
-      <p className="error">
-        News for {ticker} could not be loaded just now. Please try again later.
-      </p>
-    )
+    return <p className="error">{t('news.error', { ticker })}</p>
   }
   if (!stories || stories.length === 0) {
     return (
       <>
-        <p>No recent news found for {ticker}.</p>
-        <p className="source-note">News via Yahoo Finance.</p>
+        <p>{t('news.none', { ticker })}</p>
+        <p className="source-note">{t('news.via')}</p>
       </>
     )
   }
@@ -70,7 +68,7 @@ export default function NewsTab({ ticker }) {
           </a>
         ))}
       </div>
-      <p className="source-note">News via Yahoo Finance.</p>
+      <p className="source-note">{t('news.via')}</p>
     </>
   )
 }

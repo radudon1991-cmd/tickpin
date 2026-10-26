@@ -260,3 +260,14 @@ tr:last-child td { border-bottom: none; }
 .info-links a:hover { border-color: var(--accent); color: var(--accent); }
 .info-filings td a { color: var(--accent); text-decoration: none; font-weight: 600; }
 .info-filings td a:hover { text-decoration: underline; }
+
+/* Language toggle (topbar) */
+.lang-toggle { display: flex; align-items: center; gap: 4px; margin-right: 10px; }
+.lang-toggle button {
+  background: transparent; border: 1px solid var(--line); color: var(--muted);
+  padding: 5px 10px; border-radius: 999px; font-size: 12.5px; cursor: pointer;
+}
+.lang-toggle button:hover { border-color: var(--accent); color: var(--text); }
+.lang-toggle button.active {
+  background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600;
+}

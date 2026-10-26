@@ -3,6 +3,7 @@ import { useAuth } from '../lib/AuthContext'
 import { supabase, authConfigured } from '../lib/supabase'
 import { fetchPrices } from '../lib/prices'
 import { fetchNews, timeAgo } from '../lib/news'
+import { useLang } from '../lib/i18n'
 
 // Member dashboard: the user's own customizable watchlist as price
 // cards with sparklines, plus a merged news feed for those stocks.
@@ -47,6 +48,7 @@ function fmtPrice(v) {
 
 export default function Dashboard({ tickers, onSelect, onLogin }) {
   const { user, loading } = useAuth()
+  const { t } = useLang()
   const [myTickers, setMyTickers] = useState([])
   const [listState, setListState] = useState('loading') // loading|ok
   const [cardData, setCardData] = useState({}) // ticker -> { lastClose, changePct, closes } | { failed: true }
@@ -86,8 +88,8 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
       return
     }
     let live = true
-    for (const t of myTickers) {
-      fetchPrices(t)
+    for (const tk of myTickers) {
+      fetchPrices(tk)
         .then((data) => {
           if (!live) return
           const daily = Array.isArray(data?.daily) ? data.daily : []
@@ -96,7 +98,7 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
           const prev = closes[closes.length - 2]
           setCardData((prevMap) => ({
             ...prevMap,
-            [t]: {
+            [tk]: {
               lastClose: last ?? null,
               changePct:
                 last != null && prev != null && prev !== 0
@@ -108,7 +110,7 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
         })
         .catch(() => {
           if (!live) return
-          setCardData((prevMap) => ({ ...prevMap, [t]: { failed: true } }))
+          setCardData((prevMap) => ({ ...prevMap, [tk]: { failed: true } }))
         })
     }
     return () => {
@@ -126,9 +128,9 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
     setNews(null)
     const first = myTickers.slice(0, 6)
     Promise.all(
-      first.map((t) =>
-        fetchNews(t)
-          .then((rows) => rows.map((s) => ({ ...s, ticker: t })))
+      first.map((tk) =>
+        fetchNews(tk)
+          .then((rows) => rows.map((s) => ({ ...s, ticker: tk })))
           .catch(() => []),
       ),
     ).then((perTicker) => {
@@ -153,9 +155,9 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
     if (!q || !Array.isArray(tickers) || tickers.length === 0) return []
     const starts = []
     const contains = []
-    for (const t of tickers) {
-      if (t.ticker.startsWith(q)) starts.push(t)
-      else if (t.name.toUpperCase().includes(q)) contains.push(t)
+    for (const tk of tickers) {
+      if (tk.ticker.startsWith(q)) starts.push(tk)
+      else if (tk.name.toUpperCase().includes(q)) contains.push(tk)
       if (starts.length >= 8) break
     }
     return [...starts, ...contains].slice(0, 8)
@@ -163,34 +165,31 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
 
   async function addTicker(entry) {
     if (!entry || !user) return
-    const t = entry.ticker
-    if (myTickers.includes(t)) return
-    setMyTickers([...myTickers, t])
+    const tk = entry.ticker
+    if (myTickers.includes(tk)) return
+    setMyTickers([...myTickers, tk])
     setAddQuery('')
-    await supabase.from('watchlist').insert({ user_id: user.id, ticker: t })
+    await supabase.from('watchlist').insert({ user_id: user.id, ticker: tk })
   }
 
-  async function removeTicker(t) {
+  async function removeTicker(tk) {
     if (!user) return
-    setMyTickers(myTickers.filter((x) => x !== t))
-    await supabase.from('watchlist').delete().eq('user_id', user.id).eq('ticker', t)
+    setMyTickers(myTickers.filter((x) => x !== tk))
+    await supabase.from('watchlist').delete().eq('user_id', user.id).eq('ticker', tk)
   }
 
-  if (loading) return <p>Loading your dashboard…</p>
+  if (loading) return <p>{t('dash.loadingDashboard')}</p>
 
   if (!user) {
     return (
       <section className="dash">
-        <h2>My Dashboard</h2>
+        <h2>{t('dash.title')}</h2>
         <div className="fact-card dash-login-card">
-          <p className="dash-login-title">Log in to build your own dashboard</p>
-          <p className="dash-login-note">
-            Sign in to save a personal watchlist, see live closes and sparklines for your
-            stocks, and get a news feed for the companies you follow.
-          </p>
+          <p className="dash-login-title">{t('dash.loginTitle')}</p>
+          <p className="dash-login-note">{t('dash.loginNote')}</p>
           {onLogin && (
             <button className="primary-btn" onClick={onLogin}>
-              Log in
+              {t('dash.login')}
             </button>
           )}
         </div>
@@ -200,40 +199,38 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
 
   return (
     <section className="dash">
-      <h2>My Dashboard</h2>
+      <h2>{t('dash.title')}</h2>
 
-      <h3 className="dash-h3">My Watchlist</h3>
-      {listState === 'loading' && <p>Loading your watchlist…</p>}
+      <h3 className="dash-h3">{t('dash.myWatchlist')}</h3>
+      {listState === 'loading' && <p>{t('dash.loadingWatchlist')}</p>}
       {listState === 'ok' && myTickers.length === 0 && (
-        <p className="dash-empty">
-          Your watchlist is empty — add your first stock with the box below.
-        </p>
+        <p className="dash-empty">{t('dash.emptyWatchlist')}</p>
       )}
       {myTickers.length > 0 && (
         <div className="dash-grid">
-          {myTickers.map((t) => {
-            const entry = (tickers || []).find((x) => x.ticker === t)
-            const d = cardData[t]
+          {myTickers.map((tk) => {
+            const entry = (tickers || []).find((x) => x.ticker === tk)
+            const d = cardData[tk]
             const change = d && !d.failed ? d.changePct : null
             return (
               <div
-                key={t}
+                key={tk}
                 className="dash-card"
                 onClick={() => entry && onSelect && onSelect(entry)}
                 role={entry && onSelect ? 'button' : undefined}
-                title={entry ? `Open ${t}` : t}
+                title={entry ? t('dash.openTitle', { ticker: tk }) : tk}
               >
                 <div className="dash-card-top">
-                  <span className="dash-card-ticker">{t}</span>
+                  <span className="dash-card-ticker">{tk}</span>
                   <button
                     className="dash-remove"
                     onClick={(e) => {
                       e.stopPropagation()
-                      removeTicker(t)
+                      removeTicker(tk)
                     }}
-                    aria-label={`Remove ${t} from watchlist`}
+                    aria-label={t('dash.removeAria', { ticker: tk })}
                   >
-                    Remove
+                    {t('dash.remove')}
                   </button>
                 </div>
                 <div className="dash-card-name">{entry ? entry.name : ''}</div>
@@ -258,7 +255,7 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
 
       <div className="dash-add">
         <label className="dash-add-label" htmlFor="dash-add-input">
-          Add a stock
+          {t('dash.addStock')}
         </label>
         <div className="search-box dash-add-box">
           <input
@@ -267,8 +264,8 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
             onChange={(e) => setAddQuery(e.target.value)}
             onFocus={() => setAddFocused(true)}
             onBlur={() => setAddFocused(false)}
-            placeholder="Search by ticker or company name…"
-            aria-label="Add a stock to your watchlist"
+            placeholder={t('dash.addPlaceholder')}
+            aria-label={t('dash.addAria')}
           />
           {addFocused && addSuggestions.length > 0 && (
             <ul className="suggestions">
@@ -281,7 +278,7 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
                     onMouseDown={() => !already && addTicker(s)}
                   >
                     <strong>{s.ticker}</strong> <span>{s.name}</span>
-                    {already && <span className="dash-added-note">already added</span>}
+                    {already && <span className="dash-added-note">{t('dash.alreadyAdded')}</span>}
                   </li>
                 )
               })}
@@ -290,12 +287,10 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
         </div>
       </div>
 
-      <h3 className="dash-h3">News for your watchlist</h3>
-      {myTickers.length === 0 && (
-        <p className="dash-empty">Add stocks above and their latest headlines will appear here.</p>
-      )}
-      {myTickers.length > 0 && news === null && <p>Loading news for your watchlist…</p>}
-      {news && news.length === 0 && <p>No recent news found for your watchlist.</p>}
+      <h3 className="dash-h3">{t('dash.newsTitle')}</h3>
+      {myTickers.length === 0 && <p className="dash-empty">{t('dash.newsEmptyList')}</p>}
+      {myTickers.length > 0 && news === null && <p>{t('dash.loadingNews')}</p>}
+      {news && news.length === 0 && <p>{t('dash.noNews')}</p>}
       {news && news.length > 0 && (
         <>
           <div className="dash-news">
@@ -315,7 +310,7 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
               </a>
             ))}
           </div>
-          <p className="source-note">News via Yahoo Finance.</p>
+          <p className="source-note">{t('dash.newsVia')}</p>
         </>
       )}
     </section>

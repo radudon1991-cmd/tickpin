@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/AuthContext'
+import { useLang } from '../lib/i18n'
 
 export default function AdminPanel() {
   const { user } = useAuth()
+  const { lang, t } = useLang()
   const [members, setMembers] = useState(null)
   const [error, setError] = useState(null)
   const [busyId, setBusyId] = useState(null)
@@ -26,8 +28,8 @@ export default function AdminPanel() {
     if (
       !window.confirm(
         next
-          ? `Make ${member.email} an admin? Admins can manage members.`
-          : `Remove admin from ${member.email}?`,
+          ? t('admin.confirmMake', { email: member.email })
+          : t('admin.confirmRemove', { email: member.email }),
       )
     )
       return
@@ -41,25 +43,30 @@ export default function AdminPanel() {
     else load()
   }
 
+  const adminCount = members ? members.filter((m) => m.is_admin).length : 0
+
   return (
     <section className="admin-panel">
-      <h2>Admin — Members</h2>
+      <h2>{t('admin.title')}</h2>
       {error && <p className="error">{error}</p>}
-      {members === null && !error && <p>Loading members…</p>}
+      {members === null && !error && <p>{t('admin.loading')}</p>}
       {members && (
         <>
           <p>
-            {members.length} member{members.length === 1 ? '' : 's'} ·{' '}
-            {members.filter((m) => m.is_admin).length} admin
-            {members.filter((m) => m.is_admin).length === 1 ? '' : 's'}
+            {t('admin.countLine', {
+              members: members.length,
+              ms: lang === 'en' ? (members.length === 1 ? '' : 's') : '',
+              admins: adminCount,
+              as: lang === 'en' ? (adminCount === 1 ? '' : 's') : '',
+            })}
           </p>
           <table>
             <thead>
               <tr>
-                <th>Member</th>
-                <th>Email</th>
-                <th>Joined</th>
-                <th>Role</th>
+                <th>{t('admin.colMember')}</th>
+                <th>{t('admin.colEmail')}</th>
+                <th>{t('admin.colJoined')}</th>
+                <th>{t('admin.colRole')}</th>
                 <th></th>
               </tr>
             </thead>
@@ -69,11 +76,11 @@ export default function AdminPanel() {
                   <td>{m.display_name || '—'}</td>
                   <td>{m.email}</td>
                   <td>{m.created_at?.slice(0, 10)}</td>
-                  <td>{m.is_admin ? 'Admin' : 'Member'}</td>
+                  <td>{m.is_admin ? t('admin.roleAdmin') : t('admin.roleMember')}</td>
                   <td>
                     {m.id !== user?.id && (
                       <button onClick={() => toggleAdmin(m)} disabled={busyId === m.id}>
-                        {m.is_admin ? 'Remove admin' : 'Make admin'}
+                        {m.is_admin ? t('admin.removeAdmin') : t('admin.makeAdmin')}
                       </button>
                     )}
                   </td>

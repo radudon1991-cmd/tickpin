@@ -11,7 +11,6 @@ import {
   sampleInsiderTrades,
   sampleOwnership,
   sampleShortInterest,
-  dataSources,
 } from './lib/sampleData'
 import insiderData from './data/insider.json'
 import shortInterestData from './data/shortInterest.json'
@@ -25,6 +24,7 @@ import SmcChart from './components/SmcChart'
 import NewsTab from './components/NewsTab'
 import InfoTab from './components/InfoTab'
 import Dashboard from './components/Dashboard'
+import { useLang, LangProvider } from './lib/i18n'
 
 const STARTER_WATCHLIST = ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'ZENA']
 const TABS = [
@@ -36,13 +36,16 @@ const TABS = [
   'SMC Analysis',
   'News',
 ]
-const DISPLAY_BARS = 250
-
-function trendLabel(trend) {
-  if (trend === 'up') return 'Uptrend'
-  if (trend === 'down') return 'Downtrend'
-  return 'No clear trend'
+const TAB_KEYS = {
+  Overview: 'tabs.overview',
+  Info: 'tabs.info',
+  'Insider Trades': 'tabs.insider',
+  'Institutional Ownership': 'tabs.ownership',
+  'Short Interest': 'tabs.short',
+  'SMC Analysis': 'tabs.smc',
+  News: 'tabs.news',
 }
+const DISPLAY_BARS = 250
 
 function fmtTpRate(tpRate) {
   if (tpRate == null) return '—'
@@ -56,6 +59,7 @@ function fmtPrice(v) {
 }
 
 function FactCard({ label, fact, money }) {
+  const { t } = useLang()
   return (
     <div className="fact-card">
       <div className="fact-label">{label}</div>
@@ -63,7 +67,7 @@ function FactCard({ label, fact, money }) {
         {fact ? (money ? fmtUSD(fact.val) : fmtNum(fact.val)) : '—'}
       </div>
       <div className="fact-meta">
-        {fact ? `period ending ${fact.end} · filed ${fact.filed?.slice(0, 10)}` : 'not reported'}
+        {fact ? t('overview.periodEnding', { end: fact.end, filed: fact.filed?.slice(0, 10) }) : t('overview.notReported')}
       </div>
     </div>
   )
@@ -80,21 +84,25 @@ function StatCard({ label, value, meta }) {
 }
 
 function SampleBadge() {
-  return <span className="sample-badge">SAMPLE — ingest pending</span>
+  const { t } = useLang()
+  return <span className="sample-badge">{t('common.sampleBadge')}</span>
 }
 
-function SourceNote({ entry }) {
+function SourceNote({ skey }) {
+  const { t } = useLang()
   return (
     <p className="source-note">
-      <strong>Source:</strong> {entry.source}
+      <strong>{t('common.source')}</strong> {t(`source.${skey}Text`)}
       <br />
-      <strong>Cadence:</strong> {entry.cadence}
+      <strong>{t('common.cadence')}</strong> {t(`source.${skey}Cadence`)}
     </p>
   )
 }
 
 function AppInner() {
   const { user, profile, isAdmin, signOut, recovery } = useAuth()
+  const { lang, setLang, t } = useLang()
+  const trendText = (tr) => t(tr === 'up' ? 'smc.trendUp' : tr === 'down' ? 'smc.trendDown' : 'smc.trendNone')
   const [authOpen, setAuthOpen] = useState(false)
   const [showAdmin, setShowAdmin] = useState(false)
   const [showDashboard, setShowDashboard] = useState(false)
@@ -225,7 +233,11 @@ function AppInner() {
       <header className="topbar">
         <div className="brand">
           <span className="brand-mark">◆</span> TickPin
-          <span className="brand-sub">market data from primary sources</span>
+          <span className="brand-sub">{t('nav.tagline')}</span>
+        </div>
+        <div className="lang-toggle" role="group" aria-label="Language">
+          <button className={lang === 'th' ? 'active' : ''} onClick={() => setLang('th')}>ไทย</button>
+          <button className={lang === 'en' ? 'active' : ''} onClick={() => setLang('en')}>EN</button>
         </div>
         <div className="topbar-auth">
           {user ? (
@@ -237,7 +249,7 @@ function AppInner() {
                   if (!showDashboard) setShowAdmin(false)
                 }}
               >
-                {showDashboard ? 'Back to site' : 'Dashboard'}
+                {showDashboard ? t('nav.backToSite') : t('nav.dashboard')}
               </button>
               {isAdmin && (
                 <button
@@ -246,7 +258,7 @@ function AppInner() {
                     if (!showAdmin) setShowDashboard(false)
                   }}
                 >
-                  {showAdmin ? 'Back to site' : 'Admin'}
+                  {showAdmin ? t('nav.backToSite') : t('nav.admin')}
                 </button>
               )}
               <button
@@ -256,14 +268,14 @@ function AppInner() {
                   setShowDashboard(false)
                 }}
               >
-                Log out
+                {t('nav.logout')}
               </button>
             </>
           ) : (
             <>
-              <button onClick={() => setAuthOpen(true)}>Log in</button>
+              <button onClick={() => setAuthOpen(true)}>{t('nav.login')}</button>
               <button className="primary-btn small" onClick={() => setAuthOpen(true)}>
-                Sign up
+                {t('nav.signup')}
               </button>
             </>
           )}
@@ -290,10 +302,9 @@ function AppInner() {
       ) : (
         <>
       <section className="search-zone">
-        <h1>Every number, straight from the filing.</h1>
+        <h1>{t('nav.heroTitle')}</h1>
         <p className="lede">
-          Institutional ownership, insider trades, short interest and financials — rebuilt from SEC
-          EDGAR and FINRA primary data. No scraping, no copied scores.
+          {t('nav.lede')}
         </p>
         <div className="search-box">
           <input
@@ -303,9 +314,9 @@ function AppInner() {
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             placeholder={
-              tickers.length ? 'Search by ticker or company name… (e.g. AAPL)' : 'Loading SEC ticker list…'
+              tickers.length ? t('nav.searchPlaceholder') : t('nav.searchLoading')
             }
-            aria-label="Search tickers"
+            aria-label={t('nav.searchAria')}
           />
           {focused && suggestions.length > 0 && (
             <ul className="suggestions">
@@ -317,10 +328,10 @@ function AppInner() {
             </ul>
           )}
         </div>
-        {tickersError && <p className="error">Ticker list failed to load: {tickersError}</p>}
+        {tickersError && <p className="error">{t('nav.tickersError', { error: tickersError })}</p>}
         {user && myWatchlist.length > 0 && (
           <div className="watchlist">
-            <span>Your watchlist:</span>
+            <span>{t('nav.yourWatchlist')}</span>
             {myWatchlist.map((t) => {
               const entry = tickers.find((x) => x.ticker === t)
               return (
@@ -332,7 +343,7 @@ function AppInner() {
           </div>
         )}
         <div className="watchlist">
-          <span>Starter watchlist:</span>
+          <span>{t('nav.starterWatchlist')}</span>
           {STARTER_WATCHLIST.map((t) => {
             const entry = tickers.find((x) => x.ticker === t)
             return (
@@ -352,40 +363,36 @@ function AppInner() {
             </h2>
             <span className="cik">CIK {String(company.cik).padStart(10, '0')} · SEC EDGAR</span>
             <button className="watch-btn" onClick={() => toggleWatch(company.ticker)}>
-              {myWatchlist.includes(company.ticker) ? '★ Watching' : '☆ Watch'}
+              {myWatchlist.includes(company.ticker) ? t('nav.watching') : t('nav.watch')}
             </button>
           </div>
 
           <nav className="tabs">
-            {TABS.map((t) => (
-              <button key={t} className={tab === t ? 'active' : ''} onClick={() => setTab(t)}>
-                {t}
+            {TABS.map((name) => (
+              <button key={name} className={tab === name ? 'active' : ''} onClick={() => setTab(name)}>
+                {t(TAB_KEYS[name])}
               </button>
             ))}
           </nav>
 
           {tab === 'Overview' && (
             <section>
-              {factsState === 'loading' && <p>Loading live financials from SEC EDGAR…</p>}
+              {factsState === 'loading' && <p>{t('overview.loading')}</p>}
               {factsState === 'error' && (
                 <p className="error">
-                  Live financials could not be loaded from EDGAR just now. The nightly ingest job
-                  will cache these in our database so this page never depends on a live call.
+                  {t('overview.error')}
                 </p>
               )}
               {factsState === 'ok' && snapshot && (
                 <>
                   <div className="fact-grid">
-                    <FactCard label="Revenue (latest period)" fact={snapshot.revenue} money />
-                    <FactCard label="Net income (latest period)" fact={snapshot.netIncome} money />
-                    <FactCard label="Total assets" fact={snapshot.totalAssets} money />
-                    <FactCard label="Cash & equivalents" fact={snapshot.cash} money />
-                    <FactCard label="Shares outstanding" fact={snapshot.sharesOutstanding} />
+                    <FactCard label={t('overview.revenue')} fact={snapshot.revenue} money />
+                    <FactCard label={t('overview.netIncome')} fact={snapshot.netIncome} money />
+                    <FactCard label={t('overview.totalAssets')} fact={snapshot.totalAssets} money />
+                    <FactCard label={t('overview.cash')} fact={snapshot.cash} money />
+                    <FactCard label={t('overview.sharesOutstanding')} fact={snapshot.sharesOutstanding} />
                   </div>
-                  <p className="source-note">
-                    <strong>Source:</strong> SEC EDGAR XBRL companyfacts for {company.name}. Values
-                    deduped by period end, keeping the most recently filed figure.
-                  </p>
+                  <p className="source-note"><strong>{t('common.source')}</strong> {t('overview.sourceNote', { name: company.name })}</p>
                 </>
               )}
             </section>
@@ -435,18 +442,15 @@ function AppInner() {
                   ].sort((a, b) => b.shares - a.shares)
                   return (
                     <>
-                      <h3>Insider buying — real prices from Form 4</h3>
+                      <h3>{t('insider.heading')}</h3>
                       {marketBuys.length > 0 ? (
                         <>
                           <p>
-                            {fmtNum(marketBuys.length)} open-market purchases ·{' '}
-                            {fmtNum(buyShares)} shares bought at a weighted average of{' '}
-                            {fmtPrice(buyAvg)} · {buyDates[0]} to{' '}
-                            {buyDates[buyDates.length - 1]}
+                            {t('insider.summary', { count: fmtNum(marketBuys.length), shares: fmtNum(buyShares), avg: fmtPrice(buyAvg), from: buyDates[0], to: buyDates[buyDates.length - 1] })}
                           </p>
                           <table>
                             <thead>
-                              <tr><th>Insider</th><th>Role</th><th>Shares bought</th><th>Avg buy price</th><th>Buys</th><th>Most recent buy</th></tr>
+                              <tr><th>{t('insider.colInsider')}</th><th>{t('insider.colRole')}</th><th>{t('insider.colSharesBought')}</th><th>{t('insider.colAvgBuyPrice')}</th><th>{t('insider.colBuys')}</th><th>{t('insider.colMostRecentBuy')}</th></tr>
                             </thead>
                             <tbody>
                               {byInsider.map((b) => (
@@ -462,13 +466,12 @@ function AppInner() {
                         </>
                       ) : (
                         <p>
-                          No open-market insider purchases in the recent filings — buys shown
-                          anywhere else would be grants or option exercises, not market buys.
+                          {t('insider.noBuys')}
                         </p>
                       )}
                       <table>
                         <thead>
-                          <tr><th>Date</th><th>Insider</th><th>Role</th><th>Type</th><th>Shares</th><th>Price</th><th>Value</th></tr>
+                          <tr><th>{t('insider.colDate')}</th><th>{t('insider.colInsider')}</th><th>{t('insider.colRole')}</th><th>{t('insider.colType')}</th><th>{t('insider.colShares')}</th><th>{t('insider.colPrice')}</th><th>{t('insider.colValue')}</th></tr>
                         </thead>
                         <tbody>
                           {real.map((r, i) => (
@@ -481,8 +484,7 @@ function AppInner() {
                         </tbody>
                       </table>
                       <p className="source-note">
-                        Real trades parsed from this issuer's 12 most recent Form 4 filings on SEC
-                        EDGAR (ingest/edgar_form4.py).
+                        {t('insider.realNote')}
                       </p>
                     </>
                   )
@@ -490,9 +492,7 @@ function AppInner() {
                 if (real) {
                   return (
                     <p>
-                      No Form 4 filings found for {company.ticker} in EDGAR's recent-filing window —
-                      foreign private issuers (e.g. 20-F filers) are exempt from Form 4 insider
-                      reporting, so there are no insider trades to show.
+                      {t('insider.noneFound', { ticker: company.ticker })}
                     </p>
                   )
                 }
@@ -501,7 +501,7 @@ function AppInner() {
                     <SampleBadge />
                     <table>
                       <thead>
-                        <tr><th>Date</th><th>Insider</th><th>Role</th><th>Type</th><th>Shares</th><th>Price</th><th>Value</th></tr>
+                        <tr><th>{t('insider.colDate')}</th><th>{t('insider.colInsider')}</th><th>{t('insider.colRole')}</th><th>{t('insider.colType')}</th><th>{t('insider.colShares')}</th><th>{t('insider.colPrice')}</th><th>{t('insider.colValue')}</th></tr>
                       </thead>
                       <tbody>
                         {sampleInsiderTrades.map((r, i) => (
@@ -516,7 +516,7 @@ function AppInner() {
                   </>
                 )
               })()}
-              <SourceNote entry={dataSources.insider} />
+              <SourceNote skey="insider" />
             </section>
           )}
 
@@ -554,76 +554,73 @@ function AppInner() {
                   return (
                     <>
                       <p>
-                        {fmtNum(real.length)} institutional holders reported this stock in their
-                        latest Form 13F filings.
+                        {t('owners.intro', { count: fmtNum(real.length) })}
                       </p>
                       <div className="fact-grid" style={{ marginBottom: 16 }}>
                         <StatCard
-                          label="Institutional holders"
+                          label={t('owners.holders')}
                           value={fmtNum(real.length)}
-                          meta="filers in the table below"
+                          meta={t('owners.holdersMeta')}
                         />
                         <StatCard
-                          label="Shares reported"
+                          label={t('owners.sharesReported')}
                           value={fmtNum(totalShares)}
-                          meta="sum of each filer's latest position"
+                          meta={t('owners.sharesReportedMeta')}
                         />
                         <StatCard
-                          label="Reported value"
+                          label={t('owners.reportedValue')}
                           value={fmtUSD(totalValue)}
-                          meta="filers' own as-filed figures"
+                          meta={t('owners.reportedValueMeta')}
                         />
                         <StatCard
-                          label="% outstanding reported"
+                          label={t('owners.pctOutstanding')}
                           value={`${pctOutSum.toFixed(2)}%`}
-                          meta="sum of per-filer % — periods differ per row"
+                          meta={t('owners.pctOutstandingMeta')}
                         />
                         <StatCard
-                          label="Positions increased"
+                          label={t('owners.increased')}
                           value={fmtNum(increased)}
-                          meta={`${fmtNum(newPositions)} of them brand-new positions`}
+                          meta={t('owners.increasedMeta', { count: fmtNum(newPositions) })}
                         />
                         <StatCard
-                          label="Positions decreased"
+                          label={t('owners.decreased')}
                           value={fmtNum(decreased)}
-                          meta="vs the same filer's previous period"
+                          meta={t('owners.decreasedMeta')}
                         />
                         <StatCard
-                          label="Top 5 concentration"
+                          label={t('owners.top5')}
                           value={topShare(5)}
-                          meta="of reported shares held by the 5 largest holders"
+                          meta={t('owners.top5Meta')}
                         />
                         <StatCard
-                          label="Top 10 concentration"
+                          label={t('owners.top10')}
                           value={topShare(10)}
-                          meta="of reported shares held by the 10 largest holders"
+                          meta={t('owners.top10Meta')}
                         />
                         <StatCard
-                          label="Avg holder mark"
+                          label={t('owners.avgMark')}
                           value={fmtPrice(holderMark)}
                           meta={
                             markDiffPct != null ? (
                               <span>
-                                now {fmtPrice(lastClose)} ·{' '}
+                                {t('owners.nowPrice', { price: fmtPrice(lastClose) })} ·{' '}
                                 <span className={markDiffPct >= 0 ? 'buy' : 'sell'}>
                                   {markDiffPct >= 0 ? '+' : '−'}
-                                  {Math.abs(markDiffPct).toFixed(1)}% vs mark
+                                  {Math.abs(markDiffPct).toFixed(1)}% {t('owners.vsMark')}
                                 </span>
                               </span>
                             ) : (
-                              'period-end reported value ÷ shares'
+                              t('owners.avgMarkMetaPlain')
                             )
                           }
                         />
                       </div>
                       <p className="source-note">
-                        Avg holder mark = total period-end reported value ÷ total shares across
-                        common-stock (Shares) positions only — an estimate of where holders were
-                        marked at quarter-end, not their purchase cost.
+                        {t('owners.markNote')}
                       </p>
                       <table>
                         <thead>
-                          <tr><th>Holder</th><th>Type</th><th>Shares</th><th>Change</th><th>Reported value</th><th>% outstanding</th><th>Period</th><th>Filed</th></tr>
+                          <tr><th>{t('owners.colHolder')}</th><th>{t('owners.colType')}</th><th>{t('owners.colShares')}</th><th>{t('owners.colChange')}</th><th>{t('owners.colReportedValue')}</th><th>{t('owners.colPctOutstanding')}</th><th>{t('owners.colPeriod')}</th><th>{t('owners.colFiled')}</th></tr>
                         </thead>
                         <tbody>
                           {shown.map((r, i) => (
@@ -641,17 +638,11 @@ function AppInner() {
                       </table>
                       {real.length > shown.length && (
                         <p className="source-note">
-                          Showing the {shown.length} largest positions of {fmtNum(real.length)}{' '}
-                          reported holders — the complete table is in the data file this page
-                          loads (/owners/{company.ticker}.json).
+                          {t('owners.showingNote', { shown: shown.length, total: fmtNum(real.length), ticker: company.ticker })}
                         </p>
                       )}
                       <p className="source-note">
-                        Real holdings parsed from SEC Form 13F filings (SEC bulk Form 13F data
-                        sets, plus EDGAR filings for managers on notice status). Each row is that
-                        filer's own latest reported period — periods differ per filer and are
-                        shown per row. Change is versus the same filer's previous period.
-                        Reported value is the filer's own as-filed figure.
+                        {t('owners.realNote')}
                       </p>
                     </>
                   )
@@ -659,20 +650,19 @@ function AppInner() {
                 if (real) {
                   return (
                     <p>
-                      No Form 13F holders found for {company.ticker} in the latest processed
-                      filings.
+                      {t('owners.noneFound', { ticker: company.ticker })}
                     </p>
                   )
                 }
                 if (ownership === null) {
-                  return <p>Loading reported holders…</p>
+                  return <p>{t('owners.loading')}</p>
                 }
                 return (
                   <>
                     <SampleBadge />
                     <table>
                       <thead>
-                        <tr><th>Holder</th><th>Shares</th><th>Change</th><th>% outstanding</th><th>Period</th></tr>
+                        <tr><th>{t('owners.colHolder')}</th><th>{t('owners.colShares')}</th><th>{t('owners.colChange')}</th><th>{t('owners.colPctOutstanding')}</th><th>{t('owners.colPeriod')}</th></tr>
                       </thead>
                       <tbody>
                         {sampleOwnership.map((r, i) => (
@@ -689,7 +679,7 @@ function AppInner() {
                   </>
                 )
               })()}
-              <SourceNote entry={dataSources.ownership} />
+              <SourceNote skey="ownership" />
             </section>
           )}
 
@@ -702,7 +692,7 @@ function AppInner() {
                     <>
                       <table>
                         <thead>
-                          <tr><th>Settlement date</th><th>Short interest</th><th>Avg daily volume</th><th>Days to cover</th></tr>
+                          <tr><th>{t('short.colSettlement')}</th><th>{t('short.colShortInterest')}</th><th>{t('short.colAvgDailyVolume')}</th><th>{t('short.colDaysToCover')}</th></tr>
                         </thead>
                         <tbody>
                           {real.map((r, i) => (
@@ -714,10 +704,7 @@ function AppInner() {
                         </tbody>
                       </table>
                       <p className="source-note">
-                        Real short interest from FINRA's Consolidated Short Interest file
-                        (ingest/finra_short_interest.py), cross-checked against Nasdaq's
-                        published short-interest table. Each row is a twice-monthly snapshot
-                        as of its settlement date — never a live figure.
+                        {t('short.realNote')}
                       </p>
                     </>
                   )
@@ -725,8 +712,7 @@ function AppInner() {
                 if (real) {
                   return (
                     <p>
-                      FINRA reports no short interest rows for {company.ticker} in the latest
-                      published settlement periods.
+                      {t('short.noneFound', { ticker: company.ticker })}
                     </p>
                   )
                 }
@@ -735,7 +721,7 @@ function AppInner() {
                     <SampleBadge />
                     <table>
                       <thead>
-                        <tr><th>Settlement date</th><th>Short interest</th><th>Avg daily volume</th><th>Days to cover</th></tr>
+                        <tr><th>{t('short.colSettlement')}</th><th>{t('short.colShortInterest')}</th><th>{t('short.colAvgDailyVolume')}</th><th>{t('short.colDaysToCover')}</th></tr>
                       </thead>
                       <tbody>
                         {sampleShortInterest.map((r, i) => (
@@ -749,17 +735,16 @@ function AppInner() {
                   </>
                 )
               })()}
-              <SourceNote entry={dataSources.short} />
+              <SourceNote skey="short" />
             </section>
           )}
 
           {tab === 'SMC Analysis' && (
             <section>
-              {pricesState === 'loading' && <p>Loading price history…</p>}
+              {pricesState === 'loading' && <p>{t('smc.loading')}</p>}
               {pricesState === 'error' && (
                 <p className="error">
-                  Daily price history could not be loaded for {company.ticker} just now, so the
-                  SMC analysis cannot be computed. Please try selecting the company again later.
+                  {t('smc.error', { ticker: company.ticker })}
                 </p>
               )}
               {pricesState === 'ok' && prices && smcDaily && (
@@ -774,36 +759,36 @@ function AppInner() {
 
                   <div className="fact-grid smc-panel">
                     <StatCard
-                      label="Daily trend"
-                      value={trendLabel(smcDaily.trend)}
-                      meta="market structure on daily candles"
+                      label={t('smc.dailyTrend')}
+                      value={trendText(smcDaily.trend)}
+                      meta={t('smc.dailyTrendMeta')}
                     />
                     <StatCard
-                      label="Weekly bias"
-                      value={trendLabel(weeklyTrend)}
-                      meta="higher-timeframe reference"
+                      label={t('smc.weeklyBias')}
+                      value={trendText(weeklyTrend)}
+                      meta={t('smc.weeklyBiasMeta')}
                     />
                     <StatCard
-                      label="Signals (5y)"
+                      label={t('smc.signals5y')}
                       value={fmtNum(smcDaily.stats.total)}
-                      meta="signals over the full price history"
+                      meta={t('smc.signalsMeta')}
                     />
                     <StatCard
-                      label="TP hit rate"
+                      label={t('smc.tpRate')}
                       value={fmtTpRate(smcDaily.stats.tpRate)}
-                      meta="of closed signals"
+                      meta={t('smc.tpRateMeta')}
                     />
                   </div>
 
                   <div className="smc-panel">
-                    <h3>Entry checklist (latest bar)</h3>
+                    <h3>{t('smc.checklistTitle')}</h3>
                     <ul className="smc-check">
                       {smcDaily.checklist.map((item) => (
                         <li key={item.key}>
                           <span className={item.ok ? 'smc-status ok' : 'smc-status wait'}>
                             {item.ok ? '✓' : '—'}
                           </span>
-                          <span className="smc-check-label">{item.label}</span>
+                          <span className="smc-check-label">{t('smc.check.' + item.key)}</span>
                           <span className="smc-check-detail">{item.detail}</span>
                         </li>
                       ))}
@@ -812,29 +797,29 @@ function AppInner() {
 
                   <div className="smc-cols">
                     <div className="smc-panel">
-                      <h3>Active zones</h3>
+                      <h3>{t('smc.activeZones')}</h3>
                       {(() => {
                         const activeZones = smcDaily.zones
                           .filter((z) => !z.mitigated)
                           .slice()
                           .sort((a, b) => b.createdIndex - a.createdIndex)
                           .slice(0, 8)
-                        if (activeZones.length === 0) return <p>No active zones.</p>
+                        if (activeZones.length === 0) return <p>{t('smc.noActiveZones')}</p>
                         return (
                           <table>
                             <thead>
-                              <tr><th>Side</th><th>Range</th><th>Tested</th></tr>
+                              <tr><th>{t('smc.colSide')}</th><th>{t('smc.colRange')}</th><th>{t('smc.colTested')}</th></tr>
                             </thead>
                             <tbody>
                               {activeZones.map((z, i) => (
                                 <tr key={i}>
                                   <td className={z.side === 'demand' ? 'buy' : 'sell'}>
-                                    {z.side === 'demand' ? 'Demand' : 'Supply'}
+                                    {z.side === 'demand' ? t('smc.demand') : t('smc.supply')}
                                   </td>
                                   <td>
                                     {fmtUSD(z.bottom)} – {fmtUSD(z.top)}
                                   </td>
-                                  <td>Tested {z.touches}×</td>
+                                  <td>{t('smc.testedTimes', { n: z.touches })}</td>
                                 </tr>
                               ))}
                             </tbody>
@@ -844,7 +829,7 @@ function AppInner() {
                     </div>
 
                     <div className="smc-panel">
-                      <h3>Nearest liquidity</h3>
+                      <h3>{t('smc.nearestLiquidity')}</h3>
                       {(() => {
                         const lastClose = prices.daily[prices.daily.length - 1]?.c
                         const bslAbove = smcDaily.liquidity
@@ -863,15 +848,15 @@ function AppInner() {
                           <table>
                             <tbody>
                               <tr>
-                                <td>Buy-side liquidity (above)</td>
+                                <td>{t('smc.bslAbove')}</td>
                                 <td>{bslAbove ? fmtUSD(bslAbove.level) : '—'}</td>
                               </tr>
                               <tr>
-                                <td>Last close</td>
+                                <td>{t('smc.lastClose')}</td>
                                 <td>{lastClose != null ? fmtUSD(lastClose) : '—'}</td>
                               </tr>
                               <tr>
-                                <td>Sell-side liquidity (below)</td>
+                                <td>{t('smc.sslBelow')}</td>
                                 <td>{sslBelow ? fmtUSD(sslBelow.level) : '—'}</td>
                               </tr>
                             </tbody>
@@ -882,16 +867,14 @@ function AppInner() {
                   </div>
 
                   <div className="smc-panel">
-                    <h3>Signal history</h3>
+                    <h3>{t('smc.signalHistory')}</h3>
                     <p>
-                      {fmtNum(smcDaily.stats.total)} signals · {fmtNum(smcDaily.stats.tpHit)} TP ·{' '}
-                      {fmtNum(smcDaily.stats.slHit)} SL · {fmtNum(smcDaily.stats.open)} open ·{' '}
-                      {fmtNum(smcDaily.stats.expired)} expired
+                      {t('smc.signalSummary', { total: fmtNum(smcDaily.stats.total), tp: fmtNum(smcDaily.stats.tpHit), sl: fmtNum(smcDaily.stats.slHit), open: fmtNum(smcDaily.stats.open), expired: fmtNum(smcDaily.stats.expired) })}
                     </p>
                     {smcDaily.signals.length > 0 ? (
                       <table>
                         <thead>
-                          <tr><th>Date</th><th>Side</th><th>Entry</th><th>SL</th><th>TP</th><th>Outcome</th></tr>
+                          <tr><th>{t('smc.colDate')}</th><th>{t('smc.colSide')}</th><th>{t('smc.colEntry')}</th><th>SL</th><th>TP</th><th>{t('smc.colOutcome')}</th></tr>
                         </thead>
                         <tbody>
                           {smcDaily.signals
@@ -902,34 +885,31 @@ function AppInner() {
                               <tr key={i}>
                                 <td>{new Date(s.t * 1000).toISOString().slice(0, 10)}</td>
                                 <td className={s.side === 'buy' ? 'buy' : 'sell'}>
-                                  {s.side === 'buy' ? 'BUY' : 'SELL'}
+                                  {s.side === 'buy' ? t('smc.buy') : t('smc.sell')}
                                 </td>
                                 <td>{fmtUSD(s.entry)}</td>
                                 <td>{fmtUSD(s.sl)}</td>
                                 <td>{fmtUSD(s.tp)}</td>
                                 <td>
                                   {s.outcome === 'tp_hit'
-                                    ? 'TP hit'
+                                    ? t('smc.outcomeTp')
                                     : s.outcome === 'sl_hit'
-                                      ? 'SL hit'
+                                      ? t('smc.outcomeSl')
                                       : s.outcome === 'open'
-                                        ? 'Open'
-                                        : 'Expired'}
+                                        ? t('smc.outcomeOpen')
+                                        : t('smc.outcomeExpired')}
                                 </td>
                               </tr>
                             ))}
                         </tbody>
                       </table>
                     ) : (
-                      <p>No signals in the available price history.</p>
+                      <p>{t('smc.noSignals')}</p>
                     )}
                   </div>
 
                   <p className="source-note">
-                    <strong>Source:</strong> Prices from Yahoo Finance daily candles via our
-                    relay; SMC analysis computed in-browser from those candles; weekly candles
-                    provide the higher-timeframe bias. Analysis of public price data — not
-                    investment advice.
+                    <strong>{t('common.source')}</strong> {t('smc.sourceNote')}
                   </p>
                 </>
               )}
@@ -947,8 +927,7 @@ function AppInner() {
       )}
 
       <footer className="footer">
-        Data: SEC EDGAR &amp; FINRA public files. Not investment advice. Short interest figures are
-        snapshots as of their settlement dates, never live values.
+        {t('nav.footer')}
       </footer>
     </div>
   )
@@ -956,8 +935,10 @@ function AppInner() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <AppInner />
-    </AuthProvider>
+    <LangProvider>
+      <AuthProvider>
+        <AppInner />
+      </AuthProvider>
+    </LangProvider>
   )
 }
