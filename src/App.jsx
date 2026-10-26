@@ -66,10 +66,19 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    loadOwnership()
-      .then(setOwnership)
-      .catch(() => setOwnership({}))
-  }, [])
+    if (!company) return
+    let live = true
+    loadOwnership(company.ticker)
+      .then((rows) => {
+        if (live) setOwnership((o) => ({ ...(o || {}), [company.ticker]: rows }))
+      })
+      .catch(() => {
+        if (live) setOwnership((o) => ({ ...(o || {}), [company.ticker]: null }))
+      })
+    return () => {
+      live = false
+    }
+  }, [company])
 
   const suggestions = useMemo(() => {
     const q = query.trim().toUpperCase()
@@ -292,7 +301,7 @@ export default function App() {
                         <p className="source-note">
                           Showing the {shown.length} largest positions of {fmtNum(real.length)}{' '}
                           reported holders — the complete table is in the data file this page
-                          loads (/ownership.json).
+                          loads (/owners/{company.ticker}.json).
                         </p>
                       )}
                       <p className="source-note">
