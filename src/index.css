@@ -271,3 +271,77 @@ tr:last-child td { border-bottom: none; }
 .lang-toggle button.active {
   background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600;
 }
+
+/* --- Pro chart (TradingView-style interactive chart) --- */
+.pro-chart {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+.pro-toolbar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: nowrap;
+  overflow-x: auto; padding-bottom: 8px; scrollbar-width: thin;
+}
+.pro-toolbar + .pro-toolbar { padding-bottom: 10px; }
+.pro-group {
+  display: flex; gap: 4px; flex-wrap: nowrap; flex-shrink: 0;
+  background: var(--panel-2); border: 1px solid var(--line);
+  border-radius: 999px; padding: 3px;
+}
+.pro-chip {
+  display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
+  background: transparent; border: 1px solid transparent; color: var(--muted);
+  padding: 5px 11px; border-radius: 999px; font-size: 12.5px; cursor: pointer;
+  font: inherit; white-space: nowrap;
+}
+button.pro-chip {
+  background: var(--panel-2); border-color: var(--line);
+}
+.pro-group .pro-chip { background: transparent; border-color: transparent; }
+.pro-chip:hover { color: var(--text); border-color: var(--accent); }
+.pro-group .pro-chip:hover { border-color: transparent; }
+.pro-chip.active {
+  background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600;
+}
+.pro-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.pro-stage { position: relative; width: 100%; }
+.pro-canvas {
+  display: block; width: 100%; height: 100%;
+  cursor: crosshair; touch-action: none; user-select: none;
+  -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+}
+.pro-legend {
+  position: absolute; top: 6px; left: 8px; right: 72px;
+  display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline;
+  font-size: 12px; color: var(--muted); pointer-events: none;
+  text-shadow: 0 1px 3px rgba(11, 18, 32, 0.9);
+}
+.pro-legend b { font-weight: 600; }
+.pro-legend-date { color: var(--text); font-weight: 600; }
+.pro-legend-ind { display: inline-flex; gap: 10px; flex-wrap: wrap; }
+.pro-caption { margin: 10px 2px 2px; }
+@media (max-width: 640px) {
+  .pro-chart { padding: 8px; }
+  .pro-legend { font-size: 11px; gap: 3px 8px; right: 68px; }
+  .pro-chip { padding: 5px 9px; font-size: 12px; }
+}
+
+/* Dark modal override — the auth modal was originally built light and
+   clashed with the dark theme (Boss flagged it 2026-10-26). Appended
+   overrides win over the earlier light rules. */
+.modal {
+  background: var(--panel); color: var(--text);
+  border: 1px solid var(--line); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+}
+.modal input {
+  background: var(--bg); border-color: var(--line); color: var(--text);
+}
+.modal input::placeholder { color: var(--muted); }
+.google-btn {
+  background: var(--panel-2); border-color: var(--line); color: var(--text);
+}
+.google-btn:disabled { opacity: 0.55; }
+.modal-switch button { color: var(--accent); }
+.modal .notice { color: var(--green); }

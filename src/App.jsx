@@ -21,6 +21,7 @@ import AdminPanel from './components/AdminPanel'
 import { fetchPrices } from './lib/prices'
 import { analyzeSMC } from './lib/smc'
 import SmcChart from './components/SmcChart'
+import ProChart from './components/ProChart'
 import NewsTab from './components/NewsTab'
 import InfoTab from './components/InfoTab'
 import Dashboard from './components/Dashboard'
@@ -33,6 +34,7 @@ const TABS = [
   'Insider Trades',
   'Institutional Ownership',
   'Short Interest',
+  'Chart',
   'SMC Analysis',
   'News',
 ]
@@ -42,6 +44,7 @@ const TAB_KEYS = {
   'Insider Trades': 'tabs.insider',
   'Institutional Ownership': 'tabs.ownership',
   'Short Interest': 'tabs.short',
+  Chart: 'tabs.chart',
   'SMC Analysis': 'tabs.smc',
   News: 'tabs.news',
 }
@@ -736,6 +739,18 @@ function AppInner() {
                 )
               })()}
               <SourceNote skey="short" />
+            </section>
+          )}
+
+          {tab === 'Chart' && (
+            <section>
+              {pricesState === 'loading' && <p>{t('smc.loading')}</p>}
+              {pricesState === 'error' && (
+                <p className="error">
+                  {t('smc.error', { ticker: company.ticker })}
+                </p>
+              )}
+              {pricesState === 'ok' && prices && <ProChart candles={prices.daily} />}
             </section>
           )}
 
