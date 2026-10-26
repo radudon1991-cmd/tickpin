@@ -514,6 +514,10 @@ const STRINGS = {
   },
   'chart.todayLoading': { en: 'Loading today’s session…', th: 'กำลังโหลดข้อมูลวันนี้…' },
   'chart.todayError': { en: 'Could not load today’s session.', th: 'โหลดข้อมูลวันนี้ไม่สำเร็จ' },
+  'day.pre': { en: 'Pre-market', th: 'ก่อนเปิดตลาด' },
+  'day.after': { en: 'After-hours', th: 'หลังปิดตลาด' },
+  'day.regular': { en: 'Market hours', th: 'เวลาตลาดเปิด' },
+  'day.prevClose': { en: 'Prev close', th: 'ราคาปิดวันก่อน' },
   'live.title': { en: 'Live price', th: 'ราคาเรียลไทม์' },
   'live.note': {
     en: 'Real-time quote via TradingView (Cboe exchanges). Separate from TickPin’s daily data in the tabs below.',

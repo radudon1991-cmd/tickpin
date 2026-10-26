@@ -64,10 +64,32 @@ export default async function handler(req, res) {
   try {
     if ((req.query?.intraday || '').toString() === '1') {
       // Today's session at 1-minute resolution, including pre-market
-      // (from 04:00 ET) and after-hours (to 20:00 ET) bars.
-      const intraday = await fetchCandles(ticker, '1m', '1d', '&includePrePost=true')
+      // (from 04:00 ET) and after-hours (to 20:00 ET) bars. Also
+      // returns the previous close from Yahoo's meta block — the
+      // locked Today chart draws it as the dashed reference line.
+      const up = await fetch(
+        `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?range=1d&interval=1m&includePrePost=true`,
+        {
+          headers: {
+            'User-Agent': 'TickPin research contact: radudon1991@gmail.com',
+            Accept: 'application/json',
+          },
+        }
+      )
+      if (!up.ok) {
+        res.status(up.status).json({ error: `Yahoo responded ${up.status}` })
+        return
+      }
+      const data = await up.json()
+      const result = data?.chart?.result?.[0]
+      if (data?.chart?.error || !result) {
+        res.status(502).json({ error: 'Yahoo chart returned an error' })
+        return
+      }
+      const intraday = toCandles(data)
+      const prevClose = result.meta?.chartPreviousClose ?? result.meta?.previousClose ?? null
       res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300')
-      res.status(200).json({ intraday })
+      res.status(200).json({ intraday, prevClose })
       return
     }
     const daily = await fetchCandles(ticker, '1d')

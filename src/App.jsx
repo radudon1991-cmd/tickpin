@@ -26,6 +26,7 @@ import NewsTab from './components/NewsTab'
 import InfoTab from './components/InfoTab'
 import Dashboard from './components/Dashboard'
 import TvWidget from './components/TvWidget'
+import DayChart from './components/DayChart'
 import { useLang, LangProvider } from './lib/i18n'
 
 const STARTER_WATCHLIST = ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'ZENA']
@@ -375,6 +376,11 @@ function AppInner() {
             <h3 className="tv-h3">{t('live.title')}</h3>
             <TvWidget key={company.ticker} type="info" symbol={company.ticker} />
             <p className="tv-cap">{t('live.note')}</p>
+          </div>
+
+          <div className="tv-wrap">
+            <h3 className="tv-h3">{t('chart.today')}</h3>
+            <DayChart key={`day-${company.ticker}`} ticker={company.ticker} />
           </div>
 
           <nav className="tabs">

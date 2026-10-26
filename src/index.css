@@ -356,3 +356,16 @@ button.pro-chip {
 .dash-card-daily { color: var(--muted); font-size: 12px; margin-top: 8px; }
 .tradingview-widget-container iframe { display: block; }
 .pro-chip:disabled { opacity: 0.45; cursor: default; }
+
+/* Locked Today (single-session) chart */
+.day-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+.day-price { font-size: 26px; font-weight: 700; }
+.day-change { font-size: 14px; font-weight: 600; }
+.day-meta { color: var(--muted); font-size: 12px; }
+.day-stage { position: relative; }
+.day-canvas { display: block; touch-action: pan-y; }
+.day-legend {
+  position: absolute; top: 22px; left: 10px; pointer-events: none;
+  background: rgba(11, 18, 32, 0.85); border: 1px solid var(--line); border-radius: 6px;
+  padding: 3px 8px; font-size: 12px; color: var(--text);
+}
