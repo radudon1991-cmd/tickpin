@@ -8,7 +8,7 @@ import { useLang } from '../lib/i18n.jsx'
 // as a single live price line, green above the previous close and red
 // below it, with the dashed previous-close line and a volume strip.
 // A day-count filter (1D / 5D / 10D presets or a typed number of days,
-// up to 30) widens the frame to that many sessions — and that is the
+// up to 365) widens the frame to that many sessions — and that is the
 // ONLY way the frame changes: there is deliberately NO pan and NO
 // zoom, so nothing outside the chosen sessions can mix in. Refreshes
 // about once a minute while open.
@@ -251,8 +251,12 @@ export default function DayChart({ ticker }) {
       ctx.fillStyle = TEXT
       ctx.textAlign = 'left'
       const labelAt = [0, ...separators]
+      let lastLabelX = -Infinity
       for (const i of labelAt) {
-        ctx.fillText(DAY_FMT.format(new Date(bars[i].t * 1000)), positions[i] - plotW / n / 2 + 3, axisY + 11)
+        const x = positions[i] - plotW / n / 2 + 3
+        if (x - lastLabelX < 52) continue
+        lastLabelX = x
+        ctx.fillText(DAY_FMT.format(new Date(bars[i].t * 1000)), x, axisY + 11)
       }
     }
 
@@ -396,7 +400,7 @@ export default function DayChart({ ticker }) {
   const applyInput = (e) => {
     e.preventDefault()
     const v = parseInt(daysInput, 10)
-    if (Number.isFinite(v)) setDays(Math.min(30, Math.max(1, v)))
+    if (Number.isFinite(v)) setDays(Math.min(365, Math.max(1, v)))
   }
 
   const last = bars[bars.length - 1]
@@ -433,7 +437,7 @@ export default function DayChart({ ticker }) {
           <input
             type="number"
             min="1"
-            max="30"
+            max="365"
             value={daysInput}
             onChange={(e) => setDaysInput(e.target.value)}
             placeholder={t('day.days')}

@@ -65,23 +65,31 @@ export default async function handler(req, res) {
     if ((req.query?.intraday || '').toString() === '1') {
       // Intraday sessions at minute resolution, including pre-market
       // (from 04:00 ET) and after-hours (to 20:00 ET) bars. ?days=N
-      // (1..30, default 1) selects how many trading sessions to
+      // (1..365, default 1) selects how many trading sessions to
       // return: the locked session chart's day-count filter. Also
       // returns prevClose — the close before the returned window —
       // which the chart draws as its dashed reference line.
       let days = parseInt((req.query?.days || '1').toString(), 10)
       if (!Number.isFinite(days)) days = 1
-      days = Math.min(30, Math.max(1, days))
-      const ladder =
-        days === 1
-          ? ['1d', '1m']
-          : days <= 5
-            ? ['5d', '1m']
-            : days <= 10
-              ? ['1mo', '5m']
-              : ['3mo', '15m']
+      days = Math.min(365, Math.max(1, days))
+      // Yahoo caps how far back each intraday interval reaches:
+      // 1-minute bars about a week, 5/15-minute bars about 60 days,
+      // 60-minute bars about two years. Small windows keep the named
+      // ranges that have always worked; wider ones switch to an
+      // explicit period window sized to hold `days` trading sessions
+      // (about 1.5 calendar days per session, plus a holiday buffer).
+      let win
+      if (days === 1) win = 'range=1d&interval=1m'
+      else if (days <= 5) win = 'range=5d&interval=1m'
+      else if (days <= 10) win = 'range=1mo&interval=5m'
+      else {
+        const interval = days <= 38 ? '15m' : '60m'
+        const spanSec = (Math.ceil(days * 1.5) + 2) * 86400
+        const nowSec = Math.floor(Date.now() / 1000)
+        win = `period1=${nowSec - spanSec}&period2=${nowSec}&interval=${interval}`
+      }
       const up = await fetch(
-        `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?range=${ladder[0]}&interval=${ladder[1]}&includePrePost=true`,
+        `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?${win}&includePrePost=true`,
         {
           headers: {
             'User-Agent': 'TickPin research contact: radudon1991@gmail.com',

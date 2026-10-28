@@ -28,7 +28,7 @@ export async function fetchIntraday(ticker) {
 }
 
 // Intraday sessions for the locked session chart: `days` trading
-// sessions (1..30) of minute bars incl. pre/post market, plus the
+// sessions (1..365) of minute bars incl. pre/post market, plus the
 // close before the window (prevClose).
 export async function fetchSessions(ticker, days = 1) {
   const key = `${(ticker || '').toString().toUpperCase()}:${days}`
