@@ -64,6 +64,7 @@ const STRINGS = {
   'tabs.short': { en: 'Short Interest', th: 'ชอร์ตอินเทอเรสต์' },
   'tabs.smc': { en: 'SMC Analysis', th: 'การวิเคราะห์ SMC' },
   'tabs.news': { en: 'News', th: 'ข่าว' },
+  'tabs.comments': { en: 'Comments', th: 'ความคิดเห็น' },
 
   // ---- source notes (per tab) ----------------------------------------
   'source.insiderText': {
@@ -359,6 +360,25 @@ const STRINGS = {
   },
   'news.none': { en: 'No recent news found for {ticker}.', th: 'ไม่พบข่าวล่าสุดของ {ticker}' },
   'news.via': { en: 'News via Yahoo Finance.', th: 'ข่าวจาก Yahoo Finance' },
+  'comments.loading': { en: 'Loading comments for {ticker}…', th: 'กำลังโหลดความคิดเห็นของ {ticker}…' },
+  'comments.error': { en: "Couldn't load comments for {ticker}.", th: 'โหลดความคิดเห็นของ {ticker} ไม่สำเร็จ' },
+  'comments.none': {
+    en: 'No comments yet for {ticker} — be the first to start the conversation.',
+    th: 'ยังไม่มีความคิดเห็นสำหรับ {ticker} — เป็นคนแรกที่เริ่มพูดคุยกัน',
+  },
+  'comments.signin': { en: 'Sign in to join the conversation.', th: 'เข้าสู่ระบบเพื่อร่วมพูดคุย' },
+  'comments.placeholder': { en: 'Share your thoughts on {ticker}…', th: 'แบ่งปันความคิดเห็นของคุณเกี่ยวกับ {ticker}…' },
+  'comments.post': { en: 'Post', th: 'โพสต์' },
+  'comments.posting': { en: 'Posting…', th: 'กำลังโพสต์…' },
+  'comments.delete': { en: 'Delete', th: 'ลบ' },
+  'comments.you': { en: 'You', th: 'คุณ' },
+  'comments.admin': { en: 'Admin', th: 'ผู้ดูแล' },
+  'comments.noLinks': { en: "Links aren't allowed in comments.", th: 'ไม่อนุญาตให้ใส่ลิงก์ในความคิดเห็น' },
+  'comments.postError': { en: "Couldn't post your comment — please try again.", th: 'โพสต์ความคิดเห็นไม่สำเร็จ โปรดลองอีกครั้ง' },
+  'comments.note': {
+    en: 'Comments are member posts, not financial advice. Old comments are automatically removed after 6 months.',
+    th: 'ความคิดเห็นเป็นโพสต์ของสมาชิก ไม่ใช่คำแนะนำทางการเงิน ความคิดเห็นเก่าจะถูกลบอัตโนมัติหลังผ่านไป 6 เดือน',
+  },
 
   // ---- info tab ---------------------------------------------------------------
   'info.monthsShort': {

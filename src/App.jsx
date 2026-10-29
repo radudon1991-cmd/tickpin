@@ -23,6 +23,7 @@ import { analyzeSMC } from './lib/smc'
 import SmcChart from './components/SmcChart'
 import ProChart from './components/ProChart'
 import NewsTab from './components/NewsTab'
+import CommentsTab from './components/CommentsTab'
 import InfoTab from './components/InfoTab'
 import Dashboard from './components/Dashboard'
 import TvWidget from './components/TvWidget'
@@ -39,6 +40,7 @@ const TABS = [
   'Chart',
   'SMC Analysis',
   'News',
+  'Comments',
 ]
 const TAB_KEYS = {
   Overview: 'tabs.overview',
@@ -49,6 +51,7 @@ const TAB_KEYS = {
   Chart: 'tabs.chart',
   'SMC Analysis': 'tabs.smc',
   News: 'tabs.news',
+  Comments: 'tabs.comments',
 }
 const DISPLAY_BARS = 250
 
@@ -947,6 +950,15 @@ function AppInner() {
           {tab === 'News' && (
             <section>
               <NewsTab ticker={company.ticker} />
+            </section>
+          )}
+
+          {tab === 'Comments' && (
+            <section>
+              <CommentsTab
+                ticker={company.ticker}
+                onLogin={() => setAuthOpen(true)}
+              />
             </section>
           )}
         </main>
