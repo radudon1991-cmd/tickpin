@@ -246,6 +246,22 @@ const STRINGS = {
 
   // ---- SMC analysis ---------------------------------------------------------
   'smc.loading': { en: 'Loading price history…', th: 'กำลังโหลดประวัติราคา…' },
+  'smc.lockedTitle': {
+    en: 'SMC Analysis is a Pro feature',
+    th: 'SMC Analysis เป็นฟีเจอร์สำหรับสมาชิก Pro',
+  },
+  'smc.lockedBody': {
+    en: 'TickPin Pro unlocks the full SMC Analysis — trend, signals, zones, and the trade checklist. Paid signup is coming soon.',
+    th: 'TickPin Pro ปลดล็อก SMC Analysis ฉบับเต็ม — เทรนด์ สัญญาณ โซน และเช็กลิสต์การเทรด การสมัครแบบชำระเงินกำลังจะเปิดเร็ว ๆ นี้',
+  },
+  'smc.lockedSignin': {
+    en: 'Sign in or create an account first — then ask us about Pro or Friend access.',
+    th: 'เข้าสู่ระบบหรือสร้างบัญชีก่อน — แล้วสอบถามเราเกี่ยวกับสิทธิ์ Pro หรือ Friend',
+  },
+  'smc.lockedMember': {
+    en: 'Your account is on the Member plan. Friends of TickPin get free access — ask the admin about Friend access.',
+    th: 'บัญชีของคุณอยู่แผน Member เพื่อนของ TickPin ได้รับสิทธิ์ใช้งานฟรี — สอบถามแอดมินเกี่ยวกับสิทธิ์ Friend',
+  },
   'smc.error': {
     en: 'Daily price history could not be loaded for {ticker} just now, so the SMC analysis cannot be computed. Please try selecting the company again later.',
     th: 'ไม่สามารถโหลดประวัติราคารายวันของ {ticker} ได้ในขณะนี้ จึงคำนวณการวิเคราะห์ SMC ไม่ได้ โปรดลองเลือกบริษัทนี้อีกครั้งภายหลัง',
@@ -378,6 +394,8 @@ const STRINGS = {
   'reader.translate': { en: 'Translate', th: 'แปลภาษา' },
   'reader.translating': { en: 'Translating…', th: 'กำลังแปล…' },
   'reader.showOriginal': { en: 'Show original', th: 'แสดงต้นฉบับ' },
+  'reader.recentLangs': { en: 'Recently used', th: 'ใช้ล่าสุด' },
+  'reader.allLangs': { en: 'All languages', th: 'ภาษาทั้งหมด' },
   'reader.translateFailed': {
     en: "Couldn't translate this article.",
     th: 'ไม่สามารถแปลบทความนี้ได้',
@@ -548,6 +566,10 @@ const STRINGS = {
   'admin.colEmail': { en: 'Email', th: 'อีเมล' },
   'admin.colJoined': { en: 'Joined', th: 'วันที่เข้าร่วม' },
   'admin.colRole': { en: 'Role', th: 'บทบาท' },
+  'admin.colPlan': { en: 'Plan', th: 'แผน' },
+  'admin.planMember': { en: 'Member', th: 'Member' },
+  'admin.planPro': { en: 'Pro', th: 'Pro' },
+  'admin.planFriend': { en: 'Friend', th: 'Friend' },
   'admin.roleAdmin': { en: 'Admin', th: 'ผู้ดูแลระบบ' },
   'admin.roleMember': { en: 'Member', th: 'สมาชิก' },
   'admin.makeAdmin': { en: 'Make admin', th: 'ตั้งเป็นผู้ดูแลระบบ' },

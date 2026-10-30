@@ -31,7 +31,45 @@ const TRANSLATE_LANGS = [
   ['lo', 'ລາວ'],
   ['my', 'မြန်မာ'],
   ['km', 'ខ្មែរ'],
+  ['fil', 'Filipino'],
+  ['bn', 'বাংলা'],
+  ['ta', 'தமிழ்'],
+  ['te', 'తెలుగు'],
+  ['ur', 'اردو'],
+  ['fa', 'فارسی'],
+  ['tr', 'Türkçe'],
+  ['uk', 'Українська'],
+  ['pl', 'Polski'],
+  ['nl', 'Nederlands'],
+  ['sv', 'Svenska'],
+  ['nb', 'Norsk'],
+  ['da', 'Dansk'],
+  ['fi', 'Suomi'],
+  ['el', 'Ελληνικά'],
+  ['he', 'עברית'],
+  ['cs', 'Čeština'],
+  ['hu', 'Magyar'],
+  ['ro', 'Română'],
+  ['bg', 'Български'],
+  ['ne', 'नेपाली'],
+  ['sw', 'Kiswahili'],
 ]
+
+// The reader remembers each reader's most recent translate languages
+// (this device only) and pins them at the top of the dropdown.
+const RECENT_KEY = 'tickpin-translate-recent'
+
+function loadRecents() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]')
+    if (!Array.isArray(raw)) return []
+    return raw
+      .filter((c) => TRANSLATE_LANGS.some(([code]) => code === c))
+      .slice(0, 3)
+  } catch {
+    return []
+  }
+}
 
 function hostOf(url) {
   try {
@@ -46,7 +84,23 @@ export default function ArticleReader({ story, onClose }) {
   const [state, setState] = useState('loading') // loading|ok|error
   const [article, setArticle] = useState(null)
   const [confirmLeave, setConfirmLeave] = useState(false)
-  const [targetLang, setTargetLang] = useState(lang === 'th' ? 'th' : 'en')
+  const [recents, setRecents] = useState(loadRecents)
+  const [targetLang, setTargetLang] = useState(
+    () => loadRecents()[0] || (lang === 'th' ? 'th' : 'en'),
+  )
+
+  function chooseLang(code) {
+    setTargetLang(code)
+    setRecents((prev) => {
+      const next = [code, ...prev.filter((c) => c !== code)].slice(0, 3)
+      try {
+        localStorage.setItem(RECENT_KEY, JSON.stringify(next))
+      } catch {
+        // storage unavailable (private mode) — recents just won't persist
+      }
+      return next
+    })
+  }
   const [translated, setTranslated] = useState(null) // { title, paras } | null
   const [translating, setTranslating] = useState(false)
   const [translateFailed, setTranslateFailed] = useState(false)
@@ -176,14 +230,30 @@ export default function ArticleReader({ story, onClose }) {
                   <select
                     className="reader-lang"
                     value={targetLang}
-                    onChange={(e) => setTargetLang(e.target.value)}
+                    onChange={(e) => chooseLang(e.target.value)}
                     aria-label={t('reader.translate')}
                   >
-                    {TRANSLATE_LANGS.map(([code, name]) => (
-                      <option key={code} value={code}>
-                        {name}
-                      </option>
-                    ))}
+                    {recents.length > 0 && (
+                      <optgroup label={t('reader.recentLangs')}>
+                        {recents.map((code) => {
+                          const found = TRANSLATE_LANGS.find(([c]) => c === code)
+                          return found ? (
+                            <option key={'recent-' + code} value={code}>
+                              {found[1]}
+                            </option>
+                          ) : null
+                        })}
+                      </optgroup>
+                    )}
+                    <optgroup label={t('reader.allLangs')}>
+                      {TRANSLATE_LANGS.filter(([code]) => !recents.includes(code)).map(
+                        ([code, name]) => (
+                          <option key={code} value={code}>
+                            {name}
+                          </option>
+                        ),
+                      )}
+                    </optgroup>
                   </select>
                   {translated ? (
                     <button className="reader-btn" onClick={() => setTranslated(null)}>

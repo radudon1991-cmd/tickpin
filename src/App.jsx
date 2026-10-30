@@ -108,7 +108,7 @@ function SourceNote({ skey }) {
 }
 
 function AppInner() {
-  const { user, profile, isAdmin, signOut, recovery } = useAuth()
+  const { user, profile, isAdmin, hasSmc, signOut, recovery } = useAuth()
   const { lang, setLang, t } = useLang()
   const trendText = (tr) => t(tr === 'up' ? 'smc.trendUp' : tr === 'down' ? 'smc.trendDown' : 'smc.trendNone')
   const [authOpen, setAuthOpen] = useState(false)
@@ -772,6 +772,15 @@ function AppInner() {
 
           {tab === 'SMC Analysis' && (
             <section>
+              {!hasSmc ? (
+                <div className="fact-card smc-locked">
+                  <h3>🔒 {t('smc.lockedTitle')}</h3>
+                  <p>{t('smc.lockedBody')}</p>
+                  {!user && <p>{t('smc.lockedSignin')}</p>}
+                  {user && <p>{t('smc.lockedMember')}</p>}
+                </div>
+              ) : (
+                <>
               {pricesState === 'loading' && <p>{t('smc.loading')}</p>}
               {pricesState === 'error' && (
                 <p className="error">
@@ -942,6 +951,8 @@ function AppInner() {
                   <p className="source-note">
                     <strong>{t('common.source')}</strong> {t('smc.sourceNote')}
                   </p>
+                </>
+              )}
                 </>
               )}
             </section>

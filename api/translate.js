@@ -11,7 +11,7 @@
 const MAX_TEXT = 5000
 
 // MinT uses plain ISO codes; map the region-tagged ones we offer.
-const MINT_CODES = { 'zh-CN': 'zh', 'zh-TW': 'zh' }
+const MINT_CODES = { 'zh-CN': 'zh', 'zh-TW': 'zh', fil: 'tl' }
 
 async function translateMint(text, target) {
   const tl = MINT_CODES[target] || target

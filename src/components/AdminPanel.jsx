@@ -13,7 +13,7 @@ export default function AdminPanel() {
   async function load() {
     const { data, error: err } = await supabase
       .from('profiles')
-      .select('id, email, display_name, is_admin, created_at')
+      .select('id, email, display_name, is_admin, plan, created_at')
       .order('created_at', { ascending: true })
     if (err) setError(err.message)
     else setMembers(data)
@@ -37,6 +37,17 @@ export default function AdminPanel() {
     const { error: err } = await supabase
       .from('profiles')
       .update({ is_admin: next })
+      .eq('id', member.id)
+    setBusyId(null)
+    if (err) setError(err.message)
+    else load()
+  }
+
+  async function setPlan(member, plan) {
+    setBusyId(member.id)
+    const { error: err } = await supabase
+      .from('profiles')
+      .update({ plan })
       .eq('id', member.id)
     setBusyId(null)
     if (err) setError(err.message)
@@ -67,6 +78,7 @@ export default function AdminPanel() {
                 <th>{t('admin.colEmail')}</th>
                 <th>{t('admin.colJoined')}</th>
                 <th>{t('admin.colRole')}</th>
+                <th>{t('admin.colPlan')}</th>
                 <th></th>
               </tr>
             </thead>
@@ -77,6 +89,22 @@ export default function AdminPanel() {
                   <td>{m.email}</td>
                   <td>{m.created_at?.slice(0, 10)}</td>
                   <td>{m.is_admin ? t('admin.roleAdmin') : t('admin.roleMember')}</td>
+                  <td>
+                    {m.is_admin ? (
+                      '—'
+                    ) : (
+                      <select
+                        value={m.plan || 'member'}
+                        disabled={busyId === m.id}
+                        onChange={(e) => setPlan(m, e.target.value)}
+                        aria-label={t('admin.colPlan')}
+                      >
+                        <option value="member">{t('admin.planMember')}</option>
+                        <option value="pro">{t('admin.planPro')}</option>
+                        <option value="friend">{t('admin.planFriend')}</option>
+                      </select>
+                    )}
+                  </td>
                   <td>
                     {m.id !== user?.id && (
                       <button onClick={() => toggleAdmin(m)} disabled={busyId === m.id}>

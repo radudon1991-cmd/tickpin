@@ -12,7 +12,7 @@ export function AuthProvider({ children }) {
   async function loadProfile(uid) {
     const { data } = await supabase
       .from('profiles')
-      .select('id, email, display_name, is_admin, created_at')
+      .select('id, email, display_name, is_admin, plan, created_at')
       .eq('id', uid)
       .single()
     setProfile(data || null)
@@ -45,6 +45,11 @@ export function AuthProvider({ children }) {
     profile,
     loading,
     isAdmin: !!profile?.is_admin,
+    plan: profile?.plan || 'member',
+    // SMC Analysis access: admins, paying Pro members, and Friends
+    // (complimentary access granted by an admin).
+    hasSmc:
+      !!profile?.is_admin || profile?.plan === 'pro' || profile?.plan === 'friend',
     signIn: (email, password) => supabase.auth.signInWithPassword({ email, password }),
     signUp: (email, password) =>
       supabase.auth.signUp({
