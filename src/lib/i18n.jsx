@@ -555,6 +555,7 @@ const STRINGS = {
   'day.regular': { en: 'Market hours', th: 'เวลาตลาดเปิด' },
   'day.prevClose': { en: 'Prev close', th: 'ราคาปิดวันก่อน' },
   'live.title': { en: 'Live price', th: 'ราคาเรียลไทม์' },
+  'live.openTv': { en: 'Open {ticker} on TradingView', th: 'เปิด {ticker} ใน TradingView' },
   'live.note': {
     en: 'Real-time quote via TradingView (Cboe exchanges). Separate from TickPin’s daily data in the tabs below.',
     th: 'ราคาเรียลไทม์จาก TradingView (ตลาด Cboe) แยกจากข้อมูลรายวันของ TickPin ในแท็บด้านล่าง',

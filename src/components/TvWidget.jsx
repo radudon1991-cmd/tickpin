@@ -16,7 +16,7 @@ const SCRIPTS = {
 }
 
 export default function TvWidget({ type = 'info', symbol }) {
-  const { lang } = useLang()
+  const { lang, t } = useLang()
   const hostRef = useRef(null)
 
   useEffect(() => {
@@ -60,5 +60,27 @@ export default function TvWidget({ type = 'info', symbol }) {
     }
   }, [type, symbol, lang])
 
-  return <div className={type === 'mini' ? 'tv-host tv-host-mini' : 'tv-host'} ref={hostRef} />
+  if (type === 'mini') {
+    return <div className="tv-host tv-host-mini" ref={hostRef} />
+  }
+
+  // Info widget: the widget's own TradingView badge (top-right) links to
+  // TradingView's home page, not to this stock. A transparent link shield
+  // sits exactly over the badge and opens THIS symbol's TradingView page
+  // instead — the one deliberate door out to TradingView (the dashboard
+  // cards stay internal). The bare-ticker /symbols/<TICKER>/ URL is
+  // verified to redirect to the correct exchange page (NASDAQ, NYSE…).
+  return (
+    <div className="tv-info-wrap">
+      <div className="tv-host" ref={hostRef} />
+      <a
+        className="tv-badge-link"
+        href={`https://www.tradingview.com/symbols/${symbol}/`}
+        target="_blank"
+        rel="noreferrer"
+        title={t('live.openTv', { ticker: symbol })}
+        aria-label={t('live.openTv', { ticker: symbol })}
+      />
+    </div>
+  )
 }

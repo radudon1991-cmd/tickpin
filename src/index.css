@@ -350,6 +350,9 @@ button.pro-chip {
 .tv-wrap { margin: 16px 0 4px; }
 .tv-h3 { margin: 0 0 8px; font-size: 15px; }
 .tv-host { min-height: 240px; }
+.tv-info-wrap { position: relative; }
+.tv-badge-link { position: absolute; top: 6px; right: 8px; width: 128px; height: 30px; z-index: 3; cursor: pointer; }
+.tv-badge-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .tv-cap { color: var(--muted); font-size: 12px; margin: 6px 0 0; }
 .tv-host-mini { min-height: 220px; }
 .dash-tv-wrap { margin-top: 10px; position: relative; }
