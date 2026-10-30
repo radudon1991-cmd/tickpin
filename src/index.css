@@ -352,7 +352,8 @@ button.pro-chip {
 .tv-host { min-height: 240px; }
 .tv-cap { color: var(--muted); font-size: 12px; margin: 6px 0 0; }
 .tv-host-mini { min-height: 220px; }
-.dash-tv-wrap { margin-top: 10px; }
+.dash-tv-wrap { margin-top: 10px; position: relative; }
+.dash-tv-overlay { position: absolute; inset: 0; z-index: 2; cursor: pointer; }
 .dash-card-daily { color: var(--muted); font-size: 12px; margin-top: 8px; }
 .tradingview-widget-container iframe { display: block; }
 .pro-chip:disabled { opacity: 0.45; cursor: default; }

@@ -235,11 +235,14 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
                   </button>
                 </div>
                 <div className="dash-card-name">{entry ? entry.name : ''}</div>
-                <div
-                  className="dash-tv-wrap"
-                  onClick={(e) => e.stopPropagation()}
-                >
+                <div className="dash-tv-wrap">
                   <TvWidget type="mini" symbol={tk} />
+                  {/* Transparent shield over the TradingView iframe: the
+                      widget itself is one big link to tradingview.com and
+                      would swallow the card's click. The shield takes the
+                      click instead and lets it bubble to the card, which
+                      opens the stock's own TickPin page. */}
+                  <span className="dash-tv-overlay" aria-hidden="true" />
                 </div>
                 <div className="dash-card-daily">
                   {t('dash.dailyClose')}: {d == null ? '…' : fmtPrice(d.lastClose)}
