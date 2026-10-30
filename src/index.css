@@ -507,3 +507,57 @@ button.pro-chip {
 /* Translate tools sit at the TOP of the news reader (Boss, 2026-10-29):
    readers see the language option before the article text. */
 .reader-tools { margin-bottom: 14px; }
+
+/* --- Dashboard view toggle + compact list view (Boss, 2026-10-30) ---
+   List view mirrors the Apple Stocks layout: one row per stock with
+   ticker + name on the left, today's intraday sparkline with a dashed
+   previous-close line in the middle, and price + % pill on the right,
+   so a long watchlist fits on one screen. The choice is per device. */
+.dash-tools { display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.dash-tools .dash-org-bar { margin: -4px 0 14px; }
+.dash-view-toggle {
+  display: inline-flex; margin-left: auto; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 9px; padding: 3px; gap: 3px;
+}
+.dash-view-toggle button {
+  background: transparent; border: 0; color: var(--muted); font: inherit;
+  font-size: 13px; font-weight: 600; padding: 5px 13px; border-radius: 6px;
+  cursor: pointer; white-space: nowrap;
+}
+.dash-view-toggle button.active { background: var(--panel-2); color: var(--text); }
+.dash-list { display: flex; flex-direction: column; }
+.dash-row {
+  display: flex; align-items: center; gap: 14px; padding: 10px 8px;
+  border-bottom: 1px solid var(--line); cursor: pointer; border-radius: 6px;
+}
+.dash-row:first-child { border-top: 1px solid var(--line); }
+.dash-row:hover { background: var(--panel); }
+.dash-row.organizing { cursor: grab; }
+.dash-row.dragging { opacity: 0.45; }
+.dash-row-id { display: flex; flex-direction: column; min-width: 0; flex: 1 1 auto; }
+.dash-row-ticker { font-size: 16px; font-weight: 700; }
+.dash-row-name {
+  color: var(--muted); font-size: 12px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.dash-row-mid { flex: 0 0 auto; min-width: 92px; display: flex; justify-content: center; }
+.dash-row-loading { color: var(--muted); }
+.dash-row-quote {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+  flex: 0 0 auto; min-width: 86px;
+}
+.dash-row-price { font-size: 16px; font-weight: 700; }
+.dash-pill {
+  font-size: 12px; font-weight: 700; color: #fff; border-radius: 6px;
+  padding: 3px 8px; min-width: 64px; text-align: center;
+}
+.dash-pill.up { background: #1f9d4d; }
+.dash-pill.down { background: #e5484d; }
+.dash-pill.flat { background: var(--panel-2); color: var(--muted); }
+@media (max-width: 560px) {
+  .dash-row { gap: 10px; padding: 9px 4px; }
+  .dash-row-mid { min-width: 68px; }
+  .dash-row-spark { width: 68px; height: 30px; }
+  .dash-row-quote { min-width: 78px; }
+  .dash-view-toggle { margin-left: 0; }
+}

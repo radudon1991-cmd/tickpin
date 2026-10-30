@@ -630,6 +630,13 @@ const STRINGS = {
     en: 'Drag cards, or use the arrows, to set your order.',
     th: 'ลากการ์ด หรือใช้ลูกศร เพื่อจัดลำดับ',
   },
+  'dash.viewLabel': { en: 'Dashboard view', th: 'มุมมองแดชบอร์ด' },
+  'dash.viewCards': { en: 'Cards', th: 'การ์ด' },
+  'dash.viewList': { en: 'List', th: 'รายการ' },
+  'dash.organizeHintList': {
+    en: 'Drag rows, or use the arrows, to set your order.',
+    th: 'ลากแถว หรือใช้ลูกศร เพื่อจัดลำดับ',
+  },
   'dash.moveEarlier': { en: 'Move {ticker} earlier', th: 'ย้าย {ticker} ไปก่อนหน้า' },
   'dash.moveLater': { en: 'Move {ticker} later', th: 'ย้าย {ticker} ไปถัดไป' },
   'dash.loadingWatchlist': {
