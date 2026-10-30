@@ -685,7 +685,7 @@ export function LangProvider({ children }) {
     } catch {
       // storage unavailable (private mode etc.) — fall through to default
     }
-    return 'th'
+    return 'en'
   })
 
   useEffect(() => {
