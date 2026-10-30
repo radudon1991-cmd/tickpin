@@ -360,6 +360,35 @@ const STRINGS = {
   },
   'news.none': { en: 'No recent news found for {ticker}.', th: 'ไม่พบข่าวล่าสุดของ {ticker}' },
   'news.via': { en: 'News via Yahoo Finance.', th: 'ข่าวจาก Yahoo Finance' },
+  'reader.loading': { en: 'Loading the article…', th: 'กำลังโหลดบทความ…' },
+  'reader.excerptNote': {
+    en: 'Excerpt shown on TickPin — the full article lives at the source site.',
+    th: 'แสดงบางส่วนบน TickPin — บทความฉบับเต็มอยู่ที่เว็บไซต์ต้นทาง',
+  },
+  'reader.readFull': { en: 'Read the full article', th: 'อ่านบทความฉบับเต็ม' },
+  'reader.failed': {
+    en: "We couldn't load this article here.",
+    th: 'ไม่สามารถโหลดบทความนี้ได้ที่นี่',
+  },
+  'reader.failedHint': {
+    en: 'You can still read it at the source site.',
+    th: 'ยังสามารถอ่านบทความได้ที่เว็บไซต์ต้นทาง',
+  },
+  'reader.source': { en: 'Source: {publisher} ({host})', th: 'ที่มา: {publisher} ({host})' },
+  'reader.translate': { en: 'Translate', th: 'แปลภาษา' },
+  'reader.translating': { en: 'Translating…', th: 'กำลังแปล…' },
+  'reader.showOriginal': { en: 'Show original', th: 'แสดงต้นฉบับ' },
+  'reader.translateFailed': {
+    en: "Couldn't translate this article.",
+    th: 'ไม่สามารถแปลบทความนี้ได้',
+  },
+  'leave.title': { en: "You're leaving TickPin", th: 'คุณกำลังจะออกจาก TickPin' },
+  'leave.body': {
+    en: 'This opens {host} in a new tab. TickPin is not responsible for outside sites.',
+    th: 'ลิงก์นี้จะเปิด {host} ในแท็บใหม่ TickPin ไม่รับผิดชอบต่อเว็บไซต์ภายนอก',
+  },
+  'leave.continue': { en: 'Continue to the site', th: 'ไปยังเว็บไซต์' },
+  'leave.stay': { en: 'Stay on TickPin', th: 'อยู่บน TickPin ต่อ' },
   'comments.loading': { en: 'Loading comments for {ticker}…', th: 'กำลังโหลดความคิดเห็นของ {ticker}…' },
   'comments.error': { en: "Couldn't load comments for {ticker}.", th: 'โหลดความคิดเห็นของ {ticker} ไม่สำเร็จ' },
   'comments.none': {
@@ -572,6 +601,15 @@ const STRINGS = {
   },
   'dash.login': { en: 'Log in', th: 'เข้าสู่ระบบ' },
   'dash.myWatchlist': { en: 'My Watchlist', th: 'รายการเฝ้าดูของฉัน' },
+  'dash.organize': { en: 'Organize', th: 'จัดเรียง' },
+  'dash.organizeDone': { en: 'Done', th: 'เสร็จ' },
+  'dash.sortAZ': { en: 'Sort A–Z', th: 'เรียง A–Z' },
+  'dash.organizeHint': {
+    en: 'Drag cards, or use the arrows, to set your order.',
+    th: 'ลากการ์ด หรือใช้ลูกศร เพื่อจัดลำดับ',
+  },
+  'dash.moveEarlier': { en: 'Move {ticker} earlier', th: 'ย้าย {ticker} ไปก่อนหน้า' },
+  'dash.moveLater': { en: 'Move {ticker} later', th: 'ย้าย {ticker} ไปถัดไป' },
   'dash.loadingWatchlist': {
     en: 'Loading your watchlist…',
     th: 'กำลังโหลดรายการเฝ้าดูของคุณ…',

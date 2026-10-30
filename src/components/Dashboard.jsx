@@ -5,6 +5,7 @@ import { fetchPrices } from '../lib/prices'
 import { fetchNews, timeAgo } from '../lib/news'
 import { useLang } from '../lib/i18n'
 import TvWidget from './TvWidget'
+import ArticleReader from './ArticleReader'
 
 // Member dashboard: the user's own customizable watchlist as price
 // cards with sparklines, plus a merged news feed for those stocks.
@@ -54,6 +55,9 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
   const [listState, setListState] = useState('loading') // loading|ok
   const [cardData, setCardData] = useState({}) // ticker -> { lastClose, changePct, closes } | { failed: true }
   const [news, setNews] = useState(null) // merged stories | null while loading
+  const [openStory, setOpenStory] = useState(null) // story open in the reader
+  const [organizing, setOrganizing] = useState(false) // watchlist organize mode
+  const [dragIdx, setDragIdx] = useState(null) // card index being dragged
   const [addQuery, setAddQuery] = useState('')
   const [addFocused, setAddFocused] = useState(false)
 
@@ -68,8 +72,9 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
     setListState('loading')
     supabase
       .from('watchlist')
-      .select('ticker')
+      .select('ticker, position')
       .eq('user_id', user.id)
+      .order('position', { ascending: true, nullsFirst: false })
       .order('created_at', { ascending: true })
       .then(({ data }) => {
         if (!live) return
@@ -170,13 +175,47 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
     if (myTickers.includes(tk)) return
     setMyTickers([...myTickers, tk])
     setAddQuery('')
-    await supabase.from('watchlist').insert({ user_id: user.id, ticker: tk })
+    await supabase
+      .from('watchlist')
+      .insert({ user_id: user.id, ticker: tk, position: myTickers.length })
   }
 
   async function removeTicker(tk) {
     if (!user) return
     setMyTickers(myTickers.filter((x) => x !== tk))
     await supabase.from('watchlist').delete().eq('user_id', user.id).eq('ticker', tk)
+  }
+
+  // Persist a full ordering: position = index in the list.
+  async function persistOrder(list) {
+    if (!user) return
+    await Promise.all(
+      list.map((tk, i) =>
+        supabase
+          .from('watchlist')
+          .update({ position: i })
+          .eq('user_id', user.id)
+          .eq('ticker', tk),
+      ),
+    )
+  }
+
+  function applyOrder(list) {
+    setMyTickers(list)
+    persistOrder(list)
+  }
+
+  function moveTicker(idx, delta) {
+    const j = idx + delta
+    if (j < 0 || j >= myTickers.length) return
+    const list = [...myTickers]
+    const [item] = list.splice(idx, 1)
+    list.splice(j, 0, item)
+    applyOrder(list)
+  }
+
+  function sortAZ() {
+    applyOrder([...myTickers].sort((a, b) => a.localeCompare(b)))
   }
 
   if (loading) return <p>{t('dash.loadingDashboard')}</p>
@@ -203,26 +242,94 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
       <h2>{t('dash.title')}</h2>
 
       <h3 className="dash-h3">{t('dash.myWatchlist')}</h3>
+      {listState === 'ok' && myTickers.length > 1 && (
+        <div className="dash-org-bar">
+          {organizing ? (
+            <>
+              <button className="dash-org-btn" onClick={sortAZ}>
+                {t('dash.sortAZ')}
+              </button>
+              <button className="dash-org-btn primary" onClick={() => setOrganizing(false)}>
+                {t('dash.organizeDone')}
+              </button>
+              <span className="dash-org-hint">{t('dash.organizeHint')}</span>
+            </>
+          ) : (
+            <button className="dash-org-btn" onClick={() => setOrganizing(true)}>
+              {t('dash.organize')}
+            </button>
+          )}
+        </div>
+      )}
       {listState === 'loading' && <p>{t('dash.loadingWatchlist')}</p>}
       {listState === 'ok' && myTickers.length === 0 && (
         <p className="dash-empty">{t('dash.emptyWatchlist')}</p>
       )}
       {myTickers.length > 0 && (
         <div className="dash-grid">
-          {myTickers.map((tk) => {
+          {myTickers.map((tk, idx) => {
             const entry = (tickers || []).find((x) => x.ticker === tk)
             const d = cardData[tk]
             const change = d && !d.failed ? d.changePct : null
             return (
               <div
                 key={tk}
-                className="dash-card"
-                onClick={() => entry && onSelect && onSelect(entry)}
-                role={entry && onSelect ? 'button' : undefined}
-                title={entry ? t('dash.openTitle', { ticker: tk }) : tk}
+                className={`dash-card${organizing ? ' organizing' : ''}${dragIdx === idx ? ' dragging' : ''}`}
+                draggable={organizing}
+                onDragStart={organizing ? () => setDragIdx(idx) : undefined}
+                onDragOver={
+                  organizing
+                    ? (e) => {
+                        e.preventDefault()
+                        if (dragIdx == null || dragIdx === idx) return
+                        const list = [...myTickers]
+                        const [item] = list.splice(dragIdx, 1)
+                        list.splice(idx, 0, item)
+                        setMyTickers(list)
+                        setDragIdx(idx)
+                      }
+                    : undefined
+                }
+                onDragEnd={
+                  organizing
+                    ? () => {
+                        setDragIdx(null)
+                        persistOrder(myTickers)
+                      }
+                    : undefined
+                }
+                onClick={organizing ? undefined : () => entry && onSelect && onSelect(entry)}
+                role={!organizing && entry && onSelect ? 'button' : undefined}
+                title={organizing ? undefined : entry ? t('dash.openTitle', { ticker: tk }) : tk}
               >
                 <div className="dash-card-top">
                   <span className="dash-card-ticker">{tk}</span>
+                  {organizing && (
+                    <span className="dash-move-btns">
+                      <button
+                        className="dash-move"
+                        disabled={idx === 0}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          moveTicker(idx, -1)
+                        }}
+                        aria-label={t('dash.moveEarlier', { ticker: tk })}
+                      >
+                        ◀
+                      </button>
+                      <button
+                        className="dash-move"
+                        disabled={idx === myTickers.length - 1}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          moveTicker(idx, 1)
+                        }}
+                        aria-label={t('dash.moveLater', { ticker: tk })}
+                      >
+                        ▶
+                      </button>
+                    </span>
+                  )}
                   <button
                     className="dash-remove"
                     onClick={(e) => {
@@ -302,22 +409,31 @@ export default function Dashboard({ tickers, onSelect, onLogin }) {
         <>
           <div className="dash-news">
             {news.map((s, i) => (
-              <a
+              <div
                 key={`${s.url}-${i}`}
                 className="dash-news-row"
-                href={s.url}
-                target="_blank"
-                rel="noreferrer"
+                role="button"
+                tabIndex={0}
+                onClick={() => setOpenStory(s)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    setOpenStory(s)
+                  }
+                }}
               >
                 <span className="dash-news-meta">
                   <strong>{s.ticker}</strong> · {s.publisher}
                   {s.publishedAt > 0 ? ` · ${timeAgo(s.publishedAt)}` : ''}
                 </span>
                 <span className="dash-news-title">{s.title}</span>
-              </a>
+              </div>
             ))}
           </div>
           <p className="source-note">{t('dash.newsVia')}</p>
+          {openStory && (
+            <ArticleReader story={openStory} onClose={() => setOpenStory(null)} />
+          )}
         </>
       )}
     </section>

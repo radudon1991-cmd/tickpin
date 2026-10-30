@@ -19,6 +19,41 @@ export async function fetchNews(ticker) {
   return stories
 }
 
+const articleCache = new Map()
+
+// Fetch a readable excerpt of a story through our /api/article relay
+// so the reader stays on TickPin. Returns the relay's JSON —
+// { ok: true, title, excerpt, host } or { ok: false }.
+export async function fetchArticle(url) {
+  const key = (url || '').toString()
+  if (articleCache.has(key)) return articleCache.get(key)
+  const res = await fetch(`/api/article?url=${encodeURIComponent(key)}`)
+  if (!res.ok) throw new Error(`Article fetch failed: ${res.status}`)
+  const data = await res.json()
+  articleCache.set(key, data)
+  return data
+}
+
+const translateCache = new Map()
+
+// Translate text via our /api/translate relay (Google Translate's
+// free endpoint, server-side). Returns the translated string, or
+// throws on failure. Nothing is stored server-side.
+export async function fetchTranslation(text, target) {
+  const key = `${target}\n${text}`
+  if (translateCache.has(key)) return translateCache.get(key)
+  const res = await fetch('/api/translate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text, target }),
+  })
+  if (!res.ok) throw new Error(`Translate failed: ${res.status}`)
+  const data = await res.json()
+  if (!data?.ok || !data.text) throw new Error('Translate returned no text')
+  translateCache.set(key, data.text)
+  return data.text
+}
+
 // "just now" / "12m ago" / "3h ago" / "2d ago" / a short date for
 // anything older — Apple-Stocks-style relative timestamps.
 export function timeAgo(unixSeconds) {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { fetchNews, timeAgo } from '../lib/news'
 import { useLang } from '../lib/i18n'
+import ArticleReader from './ArticleReader'
 
 // Per-ticker News tab, styled after the Apple Stocks app: a stack of
 // story cards with a thumbnail, publisher + relative time, and the
@@ -10,6 +11,7 @@ export default function NewsTab({ ticker }) {
   const { t } = useLang()
   const [stories, setStories] = useState(null)
   const [state, setState] = useState('loading') // loading|ok|error
+  const [open, setOpen] = useState(null) // story open in the reader
 
   useEffect(() => {
     if (!ticker) return
@@ -48,12 +50,18 @@ export default function NewsTab({ ticker }) {
     <>
       <div className="news-list">
         {stories.map((s, i) => (
-          <a
+          <div
             key={`${s.url}-${i}`}
             className="news-card"
-            href={s.url}
-            target="_blank"
-            rel="noreferrer"
+            role="button"
+            tabIndex={0}
+            onClick={() => setOpen(s)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                setOpen(s)
+              }
+            }}
           >
             <div className="news-card-body">
               <div className="news-meta">
@@ -65,10 +73,11 @@ export default function NewsTab({ ticker }) {
             {s.thumbnail && (
               <img className="news-thumb" src={s.thumbnail} alt="" loading="lazy" />
             )}
-          </a>
+          </div>
         ))}
       </div>
       <p className="source-note">{t('news.via')}</p>
+      {open && <ArticleReader story={open} onClose={() => setOpen(null)} />}
     </>
   )
 }
