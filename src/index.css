@@ -483,3 +483,23 @@ button.pro-chip {
   border-radius: 6px; padding: 2px 8px; font-size: 11px; cursor: pointer; line-height: 1.5;
 }
 .dash-move:disabled { opacity: 0.35; cursor: default; }
+
+/* --- Phone topbar + no sideways scroll (Boss, 2026-10-29) ---
+   On narrow screens the header becomes two tidy rows: brand + language
+   on the first row, account buttons on their own full-width row below.
+   Nothing is cut off and the page never scrolls sideways. */
+@media (max-width: 720px) {
+  html, body { overflow-x: hidden; }
+  .app { padding: 0 12px 40px; }
+  .topbar { flex-wrap: wrap; gap: 8px 10px; padding: 12px 0; }
+  .brand { font-size: 20px; }
+  .lang-toggle { margin-left: auto; margin-right: 0; }
+  .lang-toggle button { padding: 4px 9px; font-size: 13px; }
+  .topbar-auth { order: 3; flex: 1 1 100%; flex-wrap: wrap; gap: 6px; }
+  .topbar-user {
+    max-width: 118px; overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap; font-size: 14px;
+  }
+  .topbar-auth button { white-space: nowrap; padding: 5px 9px; font-size: 13px; }
+  iframe { max-width: 100%; }
+}
