@@ -503,3 +503,7 @@ button.pro-chip {
   .topbar-auth button { white-space: nowrap; padding: 5px 9px; font-size: 13px; }
   iframe { max-width: 100%; }
 }
+
+/* Translate tools sit at the TOP of the news reader (Boss, 2026-10-29):
+   readers see the language option before the article text. */
+.reader-tools { margin-bottom: 14px; }

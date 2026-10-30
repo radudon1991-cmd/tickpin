@@ -220,12 +220,6 @@ export default function ArticleReader({ story, onClose }) {
             )}
             {state === 'ok' && (
               <>
-                <div className="reader-body">
-                  {paras.map((para, i) => (
-                    <p key={i}>{para}</p>
-                  ))}
-                </div>
-                <p className="reader-note">{t('reader.excerptNote')}</p>
                 <div className="reader-tools">
                   <select
                     className="reader-lang"
@@ -272,6 +266,12 @@ export default function ArticleReader({ story, onClose }) {
                     <span className="reader-note">{t('reader.translateFailed')}</span>
                   )}
                 </div>
+                <div className="reader-body">
+                  {paras.map((para, i) => (
+                    <p key={i}>{para}</p>
+                  ))}
+                </div>
+                <p className="reader-note">{t('reader.excerptNote')}</p>
               </>
             )}
             <p className="reader-source">
