@@ -235,19 +235,20 @@ function AppInner() {
 
   // SMC user settings (per device; optional per-stock override).
   const [smcSettingsState, setSmcSettingsState] = useState(() =>
-    loadEffectiveSettings(company.ticker),
+    loadEffectiveSettings(company?.ticker),
   )
   useEffect(() => {
-    setSmcSettingsState(loadEffectiveSettings(company.ticker))
-  }, [company.ticker])
+    setSmcSettingsState(loadEffectiveSettings(company?.ticker))
+  }, [company?.ticker])
   const smcSettings = smcSettingsState.settings
   const smcPerStock = smcSettingsState.perStock
   function updateSmcSettings(next) {
     setSmcSettingsState({ settings: next, perStock: smcPerStock })
-    if (smcPerStock) savePerStockSettings(company.ticker, next)
+    if (smcPerStock && company) savePerStockSettings(company.ticker, next)
     else saveWorkingSettings(next)
   }
   function toggleSmcPerStock(on) {
+    if (!company) return
     if (on) savePerStockSettings(company.ticker, smcSettings)
     else {
       savePerStockSettings(company.ticker, null)
