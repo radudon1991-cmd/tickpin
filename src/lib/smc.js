@@ -401,9 +401,31 @@ export function analyzeSMC(inputCandles, paramsInput = {}) {
   }
 
   // ---- Entry engine: sweep gate -> rejection at zone -> retest -> signal ----
-  function buildSignal(i, side, sweptLevel, setupLow, setupHigh) {
+  function buildSignal(i, side, sweptLevel, setupLow, setupHigh, viaRetest = false) {
     const entry = candles[i].c;
     const atr = atrArr[i];
+    // Quality score (0..6): how many of the checklist's six conditions
+    // held at the bar this signal fired, stamped from state that exists
+    // at bar i only (no repaint — same inputs the checklist uses for
+    // the latest bar). Metadata only: it never changes when a signal
+    // fires, its entry/SL/TP, or its outcome. Powers the user-facing
+    // "minimum signal quality" filter.
+    const wantZoneSide = side === 'buy' ? 'demand' : 'supply';
+    const inZone = zones.some(
+      (z) =>
+        z.side === wantZoneSide &&
+        z.createdIndex <= i &&
+        (z.mitigatedIndex === null || z.mitigatedIndex > i) &&
+        candles[i].l <= z.top &&
+        candles[i].h >= z.bottom,
+    );
+    const score =
+      (trendAt[i] === (side === 'buy' ? 'up' : 'down') ? 1 : 0) +
+      (inZone ? 1 : 0) +
+      (liquidity.some((p) => p.confirmIndex != null && p.confirmIndex <= i) ? 1 : 0) +
+      ((side === 'buy' ? sellSwept : buySwept) ? 1 : 0) +
+      1 + // rejection: a signal only ever fires on a qualifying rejection
+      (!params.requireRetest || viaRetest ? 1 : 0);
     const buffer = atr === null ? 0 : params.slBufferAtrMult * atr;
     let sl;
     let tp;
@@ -426,6 +448,7 @@ export function analyzeSMC(inputCandles, paramsInput = {}) {
       sl,
       tp,
       rr: params.targetRR,
+      score,
       outcome: 'open',
       outcomeIndex: null,
     };
@@ -530,7 +553,7 @@ export function analyzeSMC(inputCandles, paramsInput = {}) {
       const secondRej = setup.side === 'buy' ? bullRej : bearRej;
       if (near && secondRej) {
         signals.push(
-          buildSignal(i, setup.side, setup.sweptLevel, setup.setupLow, setup.setupHigh),
+          buildSignal(i, setup.side, setup.sweptLevel, setup.setupLow, setup.setupHigh, true),
         );
         setup = null;
         sellSwept = false;

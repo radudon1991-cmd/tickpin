@@ -44,7 +44,7 @@ function formatDate(unixSeconds) {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
-function drawSmcChart(canvas, cssWidth, candles, analysis, startIndex) {
+function drawSmcChart(canvas, cssWidth, candles, analysis, startIndex, display) {
   const dpr = window.devicePixelRatio || 1
   const cssHeight = HEIGHT
   canvas.width = Math.max(1, Math.round(cssWidth * dpr))
@@ -74,10 +74,11 @@ function drawSmcChart(canvas, cssWidth, candles, analysis, startIndex) {
   }
 
   const a = analysis && typeof analysis === 'object' ? analysis : {}
+  const disp = { zones: true, fvgs: true, liquidity: true, tpsl: true, ...(display || {}) }
   const events = Array.isArray(a.events) ? a.events : []
-  const zones = Array.isArray(a.zones) ? a.zones : []
-  const fvgs = Array.isArray(a.fvgs) ? a.fvgs : []
-  const liquidity = Array.isArray(a.liquidity) ? a.liquidity : []
+  const zones = disp.zones && Array.isArray(a.zones) ? a.zones : []
+  const fvgs = disp.fvgs && Array.isArray(a.fvgs) ? a.fvgs : []
+  const liquidity = disp.liquidity && Array.isArray(a.liquidity) ? a.liquidity : []
   const signals = Array.isArray(a.signals) ? a.signals : []
 
   const base = Number.isFinite(startIndex) ? startIndex : 0
@@ -341,7 +342,7 @@ function drawSmcChart(canvas, cssWidth, candles, analysis, startIndex) {
   ctx.font = '11px "Segoe UI", system-ui, -apple-system, sans-serif'
 
   // --- Latest signal: entry / SL / TP lines to the right edge ---
-  const latest = signals.length > 0 ? signals[signals.length - 1] : null
+  const latest = disp.tpsl && signals.length > 0 ? signals[signals.length - 1] : null
   if (latest) {
     const sigIndex = num(latest.index)
     if (sigIndex !== null && sigIndex <= lastFull) {
@@ -393,7 +394,7 @@ function drawSmcChart(canvas, cssWidth, candles, analysis, startIndex) {
   }
 }
 
-export default function SmcChart({ candles, analysis, startIndex }) {
+export default function SmcChart({ candles, analysis, startIndex, display }) {
   const wrapRef = useRef(null)
   const canvasRef = useRef(null)
 
@@ -405,7 +406,7 @@ export default function SmcChart({ candles, analysis, startIndex }) {
     const render = () => {
       const width = wrap.clientWidth
       if (width > 0) {
-        drawSmcChart(canvas, width, candles, analysis, startIndex)
+        drawSmcChart(canvas, width, candles, analysis, startIndex, display)
       }
     }
     render()
@@ -413,7 +414,7 @@ export default function SmcChart({ candles, analysis, startIndex }) {
     const observer = new ResizeObserver(render)
     observer.observe(wrap)
     return () => observer.disconnect()
-  }, [candles, analysis, startIndex])
+  }, [candles, analysis, startIndex, display])
 
   return (
     <div ref={wrapRef} style={{ width: '100%', height: `${HEIGHT}px` }}>

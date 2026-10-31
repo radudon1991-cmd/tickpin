@@ -26,6 +26,14 @@ import NewsTab from './components/NewsTab'
 import CommentsTab from './components/CommentsTab'
 import InfoTab from './components/InfoTab'
 import Dashboard from './components/Dashboard'
+import SmcSettings from './components/SmcSettings'
+import NewsPopup from './components/NewsPopup'
+import ArticleReader from './components/ArticleReader'
+import {
+  loadEffectiveSettings,
+  saveWorkingSettings,
+  savePerStockSettings,
+} from './lib/smcSettings'
 import TvWidget from './components/TvWidget'
 import DayChart from './components/DayChart'
 import { useLang, LangProvider } from './lib/i18n'
@@ -225,16 +233,76 @@ function AppInner() {
 
   const snapshot = useMemo(() => extractSnapshot(facts), [facts])
 
-  const smcDaily = useMemo(() => (prices ? analyzeSMC(prices.daily) : null), [prices])
+  // SMC user settings (per device; optional per-stock override).
+  const [smcSettingsState, setSmcSettingsState] = useState(() =>
+    loadEffectiveSettings(company.ticker),
+  )
+  useEffect(() => {
+    setSmcSettingsState(loadEffectiveSettings(company.ticker))
+  }, [company.ticker])
+  const smcSettings = smcSettingsState.settings
+  const smcPerStock = smcSettingsState.perStock
+  function updateSmcSettings(next) {
+    setSmcSettingsState({ settings: next, perStock: smcPerStock })
+    if (smcPerStock) savePerStockSettings(company.ticker, next)
+    else saveWorkingSettings(next)
+  }
+  function toggleSmcPerStock(on) {
+    if (on) savePerStockSettings(company.ticker, smcSettings)
+    else {
+      savePerStockSettings(company.ticker, null)
+      saveWorkingSettings(smcSettings)
+    }
+    setSmcSettingsState({ settings: smcSettings, perStock: on })
+  }
+
+  const smcSeries =
+    smcSettings.timeframe === 'weekly' ? prices?.weekly : prices?.daily
+  const smcDaily = useMemo(
+    () => (prices && smcSeries ? analyzeSMC(smcSeries, smcSettings.params) : null),
+    [prices, smcSeries, smcSettings.params],
+  )
   const weeklyTrend = useMemo(
     () => (prices ? analyzeSMC(prices.weekly).trend : null),
     [prices],
   )
-  const visibleCandles = useMemo(
-    () => (prices ? prices.daily.slice(-DISPLAY_BARS) : []),
-    [prices],
+  const dailyTrend = useMemo(
+    () => (prices ? analyzeSMC(prices.daily, smcSettings.params).trend : null),
+    [prices, smcSettings.params],
   )
-  const startIndex = prices ? prices.daily.length - visibleCandles.length : 0
+  const visibleCandles = useMemo(
+    () => (smcSeries ? smcSeries.slice(-DISPLAY_BARS) : []),
+    [smcSeries],
+  )
+  const startIndex = smcSeries ? smcSeries.length - visibleCandles.length : 0
+
+  // Signals after the user's quality/expired filters, and the stats
+  // recomputed over the chosen stats window.
+  const smcView = useMemo(() => {
+    if (!smcDaily) return null
+    const filtered = smcDaily.signals.filter(
+      (s) =>
+        (s.score ?? 6) >= smcSettings.minScore &&
+        (smcSettings.display.expired || s.outcome !== 'expired'),
+    )
+    const windowed =
+      smcSettings.statsWindow === 'all'
+        ? filtered
+        : filtered.slice(-smcSettings.statsWindow)
+    const stats = {
+      total: windowed.length,
+      tpHit: windowed.filter((s) => s.outcome === 'tp_hit').length,
+      slHit: windowed.filter((s) => s.outcome === 'sl_hit').length,
+      open: windowed.filter((s) => s.outcome === 'open').length,
+      expired: windowed.filter((s) => s.outcome === 'expired').length,
+      tpRate: null,
+    }
+    if (stats.tpHit + stats.slHit > 0)
+      stats.tpRate = stats.tpHit / (stats.tpHit + stats.slHit)
+    return { filtered, stats }
+  }, [smcDaily, smcSettings.minScore, smcSettings.display.expired, smcSettings.statsWindow])
+
+  const [popupStory, setPopupStory] = useState(null)
 
   return (
     <div className="app">
@@ -787,35 +855,61 @@ function AppInner() {
                   {t('smc.error', { ticker: company.ticker })}
                 </p>
               )}
-              {pricesState === 'ok' && prices && smcDaily && (
+              {pricesState === 'ok' && prices && smcDaily && smcView && (
                 <>
+                  <SmcSettings
+                    settings={smcSettings}
+                    onChange={updateSmcSettings}
+                    ticker={company.ticker}
+                    perStock={smcPerStock}
+                    onTogglePerStock={toggleSmcPerStock}
+                  />
                   <div className="smc-chart-wrap">
                     <SmcChart
                       candles={visibleCandles}
                       analysis={smcDaily}
                       startIndex={startIndex}
+                      display={smcSettings.display}
                     />
                   </div>
 
                   <div className="fact-grid smc-panel">
                     <StatCard
-                      label={t('smc.dailyTrend')}
+                      label={
+                        smcSettings.timeframe === 'weekly'
+                          ? t('smc.weeklyBias')
+                          : t('smc.dailyTrend')
+                      }
                       value={trendText(smcDaily.trend)}
-                      meta={t('smc.dailyTrendMeta')}
+                      meta={
+                        smcSettings.timeframe === 'weekly'
+                          ? t('smc.weeklyBiasMeta')
+                          : t('smc.dailyTrendMeta')
+                      }
                     />
                     <StatCard
-                      label={t('smc.weeklyBias')}
-                      value={trendText(weeklyTrend)}
-                      meta={t('smc.weeklyBiasMeta')}
+                      label={
+                        smcSettings.timeframe === 'weekly'
+                          ? t('smc.dailyTrend')
+                          : t('smc.weeklyBias')
+                      }
+                      value={trendText(
+                        smcSettings.timeframe === 'weekly' ? dailyTrend : weeklyTrend,
+                      )}
+                      meta={
+                        smcSettings.timeframe === 'weekly'
+                          ? t('smc.dailyTrendMeta')
+                          : t('smc.weeklyBiasMeta')
+                      }
                     />
                     <StatCard
                       label={t('smc.signals5y')}
-                      value={fmtNum(smcDaily.stats.total)}
+                      value={fmtNum(smcView.stats.total)}
                       meta={t('smc.signalsMeta')}
                     />
                     <StatCard
                       label={t('smc.tpRate')}
-                      value={fmtTpRate(smcDaily.stats.tpRate)}
+                      value={fmtTpRate(smcView.stats.tpRate)}
                       meta={t('smc.tpRateMeta')}
                     />
                   </div>
@@ -871,7 +965,7 @@ function AppInner() {
                     <div className="smc-panel">
                       <h3>{t('smc.nearestLiquidity')}</h3>
                       {(() => {
-                        const lastClose = prices.daily[prices.daily.length - 1]?.c
+                        const lastClose = smcSeries?.[smcSeries.length - 1]?.c
                         const bslAbove = smcDaily.liquidity
                           .filter(
                             (l) =>
@@ -909,43 +1003,69 @@ function AppInner() {
                   <div className="smc-panel">
                     <h3>{t('smc.signalHistory')}</h3>
                     <p>
-                      {t('smc.signalSummary', { total: fmtNum(smcDaily.stats.total), tp: fmtNum(smcDaily.stats.tpHit), sl: fmtNum(smcDaily.stats.slHit), open: fmtNum(smcDaily.stats.open), expired: fmtNum(smcDaily.stats.expired) })}
+                      {t('smc.signalSummary', { total: fmtNum(smcView.stats.total), tp: fmtNum(smcView.stats.tpHit), sl: fmtNum(smcView.stats.slHit), open: fmtNum(smcView.stats.open), expired: fmtNum(smcView.stats.expired) })}
                     </p>
-                    {smcDaily.signals.length > 0 ? (
-                      <table>
-                        <thead>
-                          <tr><th>{t('smc.colDate')}</th><th>{t('smc.colSide')}</th><th>{t('smc.colEntry')}</th><th>SL</th><th>TP</th><th>{t('smc.colOutcome')}</th></tr>
-                        </thead>
-                        <tbody>
-                          {smcDaily.signals
-                            .slice()
-                            .sort((a, b) => b.index - a.index)
-                            .slice(0, 20)
-                            .map((s, i) => (
-                              <tr key={i}>
-                                <td>{new Date(s.t * 1000).toISOString().slice(0, 10)}</td>
-                                <td className={s.side === 'buy' ? 'buy' : 'sell'}>
-                                  {s.side === 'buy' ? t('smc.buy') : t('smc.sell')}
-                                </td>
-                                <td>{fmtUSD(s.entry)}</td>
-                                <td>{fmtUSD(s.sl)}</td>
-                                <td>{fmtUSD(s.tp)}</td>
-                                <td>
-                                  {s.outcome === 'tp_hit'
-                                    ? t('smc.outcomeTp')
-                                    : s.outcome === 'sl_hit'
-                                      ? t('smc.outcomeSl')
-                                      : s.outcome === 'open'
-                                        ? t('smc.outcomeOpen')
-                                        : t('smc.outcomeExpired')}
-                                </td>
-                              </tr>
-                            ))}
-                        </tbody>
-                      </table>
-                    ) : (
-                      <p>{t('smc.noSignals')}</p>
-                    )}
+                    {(() => {
+                      const sizerOn =
+                        smcSettings.sizer.account > 0 && smcSettings.sizer.riskPct > 0
+                      const riskUsd = sizerOn
+                        ? (smcSettings.sizer.account * smcSettings.sizer.riskPct) / 100
+                        : 0
+                      const sharesFor = (s) => {
+                        const per = Math.abs(s.entry - s.sl)
+                        return per > 0 ? Math.floor(riskUsd / per) : 0
+                      }
+                      const latestSig = smcView.filtered[smcView.filtered.length - 1]
+                      return (
+                        <>
+                          {sizerOn && latestSig && (
+                            <p className="smc-sizer-line">
+                              {t('smcset.sizerLine', {
+                                risk: fmtUSD(riskUsd),
+                                shares: fmtNum(sharesFor(latestSig)),
+                              })}
+                            </p>
+                          )}
+                          {smcView.filtered.length > 0 ? (
+                            <table>
+                              <thead>
+                                <tr><th>{t('smc.colDate')}</th><th>{t('smc.colSide')}</th><th>{t('smc.colEntry')}</th><th>SL</th><th>TP</th><th>{t('smcset.scoreCol')}</th><th>{t('smc.colOutcome')}</th>{sizerOn && <th>{t('smcset.sharesCol')}</th>}</tr>
+                              </thead>
+                              <tbody>
+                                {smcView.filtered
+                                  .slice()
+                                  .sort((a, b) => b.index - a.index)
+                                  .slice(0, 20)
+                                  .map((s, i) => (
+                                    <tr key={i}>
+                                      <td>{new Date(s.t * 1000).toISOString().slice(0, 10)}</td>
+                                      <td className={s.side === 'buy' ? 'buy' : 'sell'}>
+                                        {s.side === 'buy' ? t('smc.buy') : t('smc.sell')}
+                                      </td>
+                                      <td>{fmtUSD(s.entry)}</td>
+                                      <td>{fmtUSD(s.sl)}</td>
+                                      <td>{fmtUSD(s.tp)}</td>
+                                      <td>{s.score != null ? `${s.score}/6` : '—'}</td>
+                                      <td>
+                                        {s.outcome === 'tp_hit'
+                                          ? t('smc.outcomeTp')
+                                          : s.outcome === 'sl_hit'
+                                            ? t('smc.outcomeSl')
+                                            : s.outcome === 'open'
+                                              ? t('smc.outcomeOpen')
+                                              : t('smc.outcomeExpired')}
+                                      </td>
+                                      {sizerOn && <td>{fmtNum(sharesFor(s))}</td>}
+                                    </tr>
+                                  ))}
+                              </tbody>
+                            </table>
+                          ) : (
+                            <p>{t('smc.noSignals')}</p>
+                          )}
+                        </>
+                      )
+                    })()}
                   </div>
 
                   <p className="source-note">
@@ -975,6 +1095,11 @@ function AppInner() {
         </main>
       )}
         </>
+      )}
+
+      <NewsPopup onOpenStory={setPopupStory} />
+      {popupStory && (
+        <ArticleReader story={popupStory} onClose={() => setPopupStory(null)} />
       )}
 
       <footer className="footer">
